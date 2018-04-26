@@ -16,16 +16,16 @@
       <v-list>
         <v-subheader>Menu</v-subheader>
 
-        <v-list-tile @click="alert('mostar las minutas')">
+        <v-list-tile :color="active('Mis Minutas')" @click="goTo('minutas')">
           <v-list-tile-action>
-            <v-icon>assignment</v-icon>
+            <v-icon :color="active('Mis Minutas')">assignment</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Mis Minutas</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="alert('mostar las minutas')">
+        <v-list-tile @click="">
           <v-list-tile-action>
             <v-icon>add</v-icon>
           </v-list-tile-action>
@@ -34,16 +34,16 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="alert('mostar las minutas')">
+        <v-list-tile :color="active('Tabla de Composición')" @click="goTo('tabla-composicion')">
           <v-list-tile-action>
-            <v-icon>list</v-icon>
+            <v-icon :color="active('Tabla de Composición')">list</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Tabla de Composición</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="alert('mostar las minutas')">
+        <v-list-tile @click="">
           <v-list-tile-action>
             <v-icon>local_pizza</v-icon>
           </v-list-tile-action>
@@ -55,7 +55,7 @@
         <v-divider></v-divider>
         <v-subheader>Soporte</v-subheader>
 
-        <v-list-tile @click="alert('mostar las minutas')">
+        <v-list-tile @click="">
           <v-list-tile-action>
             <v-icon>insert_comment</v-icon>
           </v-list-tile-action>
@@ -64,7 +64,7 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="alert('mostar las minutas')">
+        <v-list-tile @click="">
           <v-list-tile-action>
             <v-icon>error</v-icon>
           </v-list-tile-action>
@@ -80,14 +80,12 @@
       color="primary"
       dark>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-toolbar-title v-text="this.$route.name"></v-toolbar-title>
     </v-toolbar>
     <v-content>
-      <v-jumbotron color="grey lighten-2">
-        <v-container fill-height>
-          <router-view/>
-        </v-container>
-      </v-jumbotron>
+      <v-container grid-list-xl>
+        <router-view/>
+      </v-container>
     </v-content>
   </v-app>
 </template>
@@ -99,8 +97,15 @@ export default {
       clipped: false,
       drawer: true,
       fixed: false,
-      miniVariant: false,
-      title: 'Mis Minutas'
+      miniVariant: false
+    }
+  },
+  methods: {
+    goTo (ruta) {
+      this.$router.push(ruta)
+    },
+    active (ruta) {
+      if (ruta === this.$route.name) return 'primary'
     }
   }
 }
