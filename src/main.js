@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import InterceptorApi from '@/services/Interceptor.service'
+import store from '@/store/index'
+import GSignInButton from 'vue-google-signin-button'
+Vue.use(GSignInButton)
 
 Vue.use(Vuetify, { theme: {
   primary: '#0097A7',
@@ -16,12 +20,15 @@ Vue.use(Vuetify, { theme: {
   warning: '#FFC107'
 }})
 
+Vue.http.interceptors.push(InterceptorApi)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
