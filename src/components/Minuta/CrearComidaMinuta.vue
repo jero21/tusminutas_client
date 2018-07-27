@@ -6,9 +6,10 @@
       v-model="select"
       label="Busca tus Alimentos"
       item-text="nombre"
+      persistent-hint
+      background-color="red"
       autocomplete
       cache-items
-      @change="pushAlimento()"
       return-object>
     </v-select>
     <v-data-table
@@ -21,7 +22,7 @@
       rows-per-page-text="Datos por pagina"
       class="elevation-3 scroll-y">
         <template slot="items" slot-scope="props">
-          <tr>
+          <tr class="alimento">
             <td class="text-xs-left">{{ props.item.nombre }}</td>
             <td class="text-xs-left">
               <v-text-field
@@ -36,13 +37,19 @@
             <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.energia).toFixed(1) }}</td>
             <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.proteinas).toFixed(1) }}</td>
             <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.fibra).toFixed(1) }}</td>
-            <td class="text-xs-left">
-              <v-btn @click="props.expanded = !props.expanded" flat icon>
-                <v-icon>more</v-icon>
-              </v-btn>
-              <v-btn @click="alimentosComida.splice(props.index,1)" color="red" flat icon>
-                <v-icon>delete</v-icon>
-              </v-btn>
+            <td colspan="100%" class="text-xs-left">
+              <v-layout row wrap>
+                <v-flex xs12 md6>
+                  <v-btn @click="alimentosComida.splice(props.index,1)" small flat color="red" icon>
+                    <v-icon>delete</v-icon>
+                  </v-btn>
+                </v-flex>
+                <v-flex xs12 md6>
+                 <v-btn @click="props.expanded = !props.expanded" small flat icon>
+                  <v-icon >more</v-icon>
+                 </v-btn>
+                </v-flex>
+              </v-layout>
             </td>
           </tr>
         </template>
@@ -175,7 +182,7 @@ export default {
         {text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: false},
         {text: 'Proteínas (gr)', value: 'proteinas', align: 'left', sortable: false},
         {text: 'Carbohidratos (gr)', value: 'fibra', align: 'left', sortable: false},
-        {text: '', align: 'left', sortable: false}
+        {text: 'Acciones', align: 'left', sortable: false}
       ],
       rows_per_page_items: [{'text': 'Todos', 'value': -1}, 5, 10, 25],
       select: {},
@@ -197,7 +204,7 @@ export default {
       vm.$emit('update:totales', totales)
     },
     getValor (cantidad, propiedad) {
-      let valor = (cantidad * propiedad) / 300
+      let valor = (cantidad * propiedad) / 100
       return valor
     },
     getTotal () {
@@ -218,7 +225,7 @@ export default {
     select (alimento) {
       if (this.search !== '') {
         let newAlimento = JSON.parse(JSON.stringify(alimento))
-        newAlimento.cantidad = 300
+        newAlimento.cantidad = 100
         this.alimentosComida.push(newAlimento)
         this.select = {}
         this.search = ''
@@ -233,7 +240,17 @@ export default {
 <style scoped>
   .input-cantidad {
     margin: 0 !important; 
+    padding: 0;
     width: 70px;
+    max-height: 40px;
+  }
+
+  .table.table tbody td, table.table tbody th {
+    max-height: 20px;
+  }
+
+  table.table tfoot tr {
+    height: 35px;
   }
 </style>
 

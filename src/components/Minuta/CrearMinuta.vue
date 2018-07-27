@@ -1,6 +1,6 @@
 <template>
   <v-layout row wrap>
-    <v-flex xs12 >
+      <v-flex xs12 >
       <v-expansion-panel>
         <v-expansion-panel-content>
           <div slot="header">TOTALES</div>
@@ -74,6 +74,10 @@ export default {
   .input-cantidad {
     margin: 0 !important; 
     width: 70px;
+  }
+
+  .stepper__content {
+    padding: 16px;
   }
 </style>
 

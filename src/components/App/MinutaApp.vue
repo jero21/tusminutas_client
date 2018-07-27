@@ -142,6 +142,15 @@ export default {
     max-height: 400px !important; 
     overflow-y: auto;
   }
+
+  .table.table thead tr {
+    height: 38px;
+  }
+
+  .table.table thead th {
+    font-size: 13px;
+  }
+
 </style>
 
 
