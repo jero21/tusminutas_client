@@ -25,9 +25,9 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="">
+        <v-list-tile :color="active('Crear Minuta')" @click="goTo('crear-minuta')">
           <v-list-tile-action>
-            <v-icon>add</v-icon>
+            <v-icon :color="active('Crear Minuta')">add</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Crear Minuta</v-list-tile-title>
@@ -43,7 +43,7 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="">
+        <v-list-tile :color="active('Mis Alimentos')" @click="goTo('mis-alimentos')">
           <v-list-tile-action>
             <v-icon>local_pizza</v-icon>
           </v-list-tile-action>
@@ -81,6 +81,18 @@
       dark>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title v-text="this.$route.name"></v-toolbar-title>
+      <v-spacer></v-spacer>
+      {{credentialService.getCurrentUser()}}
+          <v-menu bottom left>
+            <v-btn icon slot="activator" dark>
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+            <v-list>
+              <v-list-tile @click="logout">
+                <v-list-tile-title>Cerrar Sesión</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
     </v-toolbar>
     <v-content>
       <v-container grid-list-xl>
@@ -91,14 +103,23 @@
 </template>
 
 <script>
+import CredentialsServices from '@/services/Credentials.service.js'
 export default {
   data () {
     return {
+      credentialService: new CredentialsServices(),
       clipped: false,
       drawer: true,
       fixed: false,
       miniVariant: false
     }
+  },
+  created () {
+    let vm = this
+    vm.$store.dispatch('loadAlimentos').then(() => {
+    }, () => {
+      vm.$root.$emit('error-carga-alimentos')
+    })
   },
   methods: {
     goTo (ruta) {
@@ -106,8 +127,22 @@ export default {
     },
     active (ruta) {
       if (ruta === this.$route.name) return 'primary'
+    },
+    logout () {
+      let vm = this
+      vm.credentialService.clearCredentials()
+      vm.$router.push('/login')
     }
   }
 }
 </script>
+
+<style>
+  tbody {
+    max-height: 400px !important; 
+    overflow-y: auto;
+  }
+</style>
+
+
 
