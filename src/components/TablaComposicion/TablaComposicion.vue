@@ -1,7 +1,21 @@
 <template>
   <v-layout row wrap>
+    <v-snackbar
+      :timeout="8000"
+      top
+      right
+      v-model="snackbar.model"
+      :color="snackbar.color">
+      {{ snackbar.message }}
+      <v-btn flat icon color="white" @click.native="snackbar.model = false">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
     <v-flex xs12>
       <h3 class="title">Tabla de composición química de los alimentos</h3>
+    </v-flex>
+    <v-flex xs6>
+      <v-divider></v-divider>
     </v-flex>
     <v-flex xs12>
       <v-toolbar
@@ -24,7 +38,7 @@
         <v-tab
           v-for="grupo in grupos"
           :key="grupo.name"
-          @click="setGrupo(grupo.name)"
+          @click="selectTab = grupo.name"
         >
         {{ grupo.name }}
         </v-tab>
@@ -32,7 +46,9 @@
     </v-toolbar>
     <v-data-table
       :headers="headers"
-      :items="items"
+      :items="alimentosItems"
+      :loading="loadingTabla"
+      no-data-text="Cargando alimentos ..."
       rows-per-page-text="Datos por pagina"
       class="elevation-5"
       style="max-height: 500px !important; overflow-y: auto;">
@@ -51,7 +67,6 @@
 </template>
 
 <script>
-import {alimentoService} from '@/services/Alimento.service'
 export default {
   data () {
     return {
@@ -78,20 +93,22 @@ export default {
         {text: 'Fibra (gr)', value: 'fibra', align: 'left', sortable: true},
         {text: 'Calcio (mg)', value: 'calcio', align: 'left', sortable: true}
       ],
-      alimentos: [],
       items: [],
       buscar: '',
-      selectTab: 'Lact'
+      selectTab: 'Lact',
+      snackbar: {
+        model: false,
+        color: 'success',
+        message: 'ee'
+      }
     }
   },
   mounted () {
     let vm = this
-    alimentoService.query().then(data => {
-      vm.alimentos = data.body
-      vm.items = vm.alimentos.filter(alimento => {
-        return alimento.grupo === 'Lácteos'
-      })
+    vm.items = vm.alimentos.filter(alimento => {
+      return alimento.grupo === 'Lácteos'
     })
+    if (vm.alimentos.length === 0) vm.cargarAlimentos()
   },
   methods: {
     setGrupo (grupo) {
@@ -106,18 +123,52 @@ export default {
       vm.items = vm.alimentos.filter(alimento => {
         return alimento.grupo === grupo
       })
+    },
+    cargarAlimentos () {
+      let vm = this
+      vm.$store.dispatch('loadAlimentos').then(() => {
+        vm.loadingTabla = false
+        vm.items = vm.alimentos.filter(alimento => {
+          return alimento.grupo === 'Lácteos'
+        })
+      }, () => {
+        vm.showSnackbar('error', 'Error al cargar los alimentos')
+      })
+    },
+    showSnackbar (color, message) {
+      let vm = this
+      vm.snackbar.color = color
+      vm.snackbar.message = message
+      vm.snackbar.model = true
+      console.log(message)
     }
   },
-  watch: {
-    buscar (buscar) {
+  computed: {
+    alimentos () {
+      return this.$store.getters.alimentos
+    },
+    alimentosItems () {
       let vm = this
-      console.log(buscar)
-      if (!buscar || buscar === '') return vm.setGrupo(vm.selectTab)
-      buscar = buscar.toLowerCase()
-      vm.items = vm.alimentos.filter(alimento => {
-        console.log(alimento)
-        return alimento.nombre.toLowerCase().indexOf(buscar) !== -1
-      })
+      if (vm.buscar !== '') {
+        let buscar = vm.buscar.toLowerCase()
+        return vm.alimentos.filter(alimento => {
+          return alimento.nombre.toLowerCase().indexOf(buscar) !== -1
+        })
+      } else {
+        let grupo = vm.selectTab
+        if (grupo === 'Lact') grupo = 'Lácteos'
+        if (grupo === 'Prep') grupo = 'Preparaciones'
+        if (grupo === 'Diet') grupo = 'Dietéticos'
+        if (grupo === 'Frut y Verd') grupo = 'Frutas y Verduras'
+        if (grupo === 'Gras,sals y arder') grupo = 'Grasas. salsas y aderezos'
+        if (grupo === 'Beb cal') grupo = 'Bebidas calientes'
+        return vm.alimentos.filter(alimento => {
+          return alimento.grupo === grupo
+        })
+      }
+    },
+    loadingTabla () {
+      return this.alimentos.length === 0
     }
   }
 }
