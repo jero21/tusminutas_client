@@ -21,7 +21,7 @@
               </v-toolbar>
               <v-card-text>
                 <v-form v-model="valid" ref="form" lazy-validation>
-                  <v-text-field :rules="emailRules" prepend-icon="person" name="login" label="Login" v-model="credentials.correo" type="text" required></v-text-field>
+                  <v-text-field :rules="emailRules" prepend-icon="person" name="login" label="Login" v-model="credentials.email" type="text" required></v-text-field>
                   <v-text-field :rules="passwordRules" prepend-icon="lock" name="password" label="Password" v-model="credentials.password" type="password" required></v-text-field>
                 </v-form>
               </v-card-text>
@@ -56,7 +56,7 @@ export default {
         v => !!v || 'Debe ingresar una constraseña'
       ],
       credentials: {
-        correo: '',
+        email: '',
         password: ''
       },
       gradient: 'to top right,rgba(0,151,167,1),rgba(2,119,129,1) ',
@@ -71,7 +71,7 @@ export default {
       vm.isLoading = true
       loginService.authenticate(credentials).then(data => {
         vm.credentialService.setToken(data.body.token)
-        vm.credentialService.setCurrentUser(data.body.correo)
+        vm.credentialService.setCurrentUser(data.body.email)
         this.$router.push('/minutas')
         console.log(data)
       }, err => {
