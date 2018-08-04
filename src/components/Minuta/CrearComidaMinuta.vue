@@ -40,13 +40,14 @@
             <td colspan="100%" class="text-xs-left">
               <v-layout row wrap>
                 <v-flex xs12 md6>
-                  <v-btn @click="alimentosComida.splice(props.index,1)" small flat color="red" icon>
+                  <v-btn @click="alimentosComida.splice(props.index,1); changeTotales()" small flat color="red" icon>
                     <v-icon>delete</v-icon>
                   </v-btn>
                 </v-flex>
                 <v-flex xs12 md6>
                  <v-btn @click="props.expanded = !props.expanded" small flat icon>
-                  <v-icon >more</v-icon>
+                  <v-icon v-if="!props.expanded">expand_more</v-icon>
+                  <v-icon v-else>expand_less</v-icon>
                  </v-btn>
                 </v-flex>
               </v-layout>
@@ -54,108 +55,7 @@
           </tr>
         </template>
         <template slot="expand" slot-scope="props">
-          <v-card flat style="max-height: 200px" class="blue-grey lighten-5  scroll-y">
-            <v-card-text>
-              <v-layout row wrap>
-                <v-flex xs4 md2>
-                  <strong>A.G Omega 3 : </strong> {{ getValor(props.item.cantidad, props.item.a_g_omega3).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>A.G Omega 6 : </strong> {{ getValor(props.item.cantidad, props.item.a_g_omega6).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>A.G Trans : </strong> {{ getValor(props.item.cantidad, props.item.a_g_trans).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>A.G Monosat : </strong> {{ getValor(props.item.cantidad, props.item.a_grasos_monosat).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>A.G Polisat : </strong> {{ getValor(props.item.cantidad, props.item.a_grasos_polisat).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>A.G Sat : </strong> {{ getValor(props.item.cantidad, props.item.a_grasos_sat).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Ácido Fólico : </strong> {{ getValor(props.item.cantidad, props.item.acido_folico).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Ácido Pantoténico : </strong> {{ getValor(props.item.cantidad, props.item.acido_pantotenico).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Biotina : </strong> {{ getValor(props.item.cantidad, props.item.biotina).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Calcio : </strong> {{ getValor(props.item.cantidad, props.item.calcio).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Cobre : </strong> {{ getValor(props.item.cantidad, props.item.cobre).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Colesterol : </strong> {{ getValor(props.item.cantidad, props.item.colesterol).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Fibra : </strong> {{ getValor(props.item.cantidad, props.item.fibra).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Fósforo : </strong> {{ getValor(props.item.cantidad, props.item.fosforo).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Grasas Totales : </strong> {{ getValor(props.item.cantidad, props.item.grasas_totales).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Hierro : </strong> {{ getValor(props.item.cantidad, props.item.hierro).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Magnesio : </strong> {{ getValor(props.item.cantidad, props.item.magnesio).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Manganeso : </strong> {{ getValor(props.item.cantidad, props.item.manganeso).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Potasio : </strong> {{ getValor(props.item.cantidad, props.item.potasio).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Riboflavina : </strong> {{ getValor(props.item.cantidad, props.item.riboflavina).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Selenio : </strong> {{ getValor(props.item.cantidad, props.item.selenio).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Sodio : </strong> {{ getValor(props.item.cantidad, props.item.sodio).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Tiamina : </strong> {{ getValor(props.item.cantidad, props.item.tiamina).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Yodo : </strong> {{ getValor(props.item.cantidad, props.item.yodo).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Zinc : </strong> {{ getValor(props.item.cantidad, props.item.zinc).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Vitamina A : </strong> {{ getValor(props.item.cantidad, props.item.vit_a).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Vitamina B6 : </strong> {{ getValor(props.item.cantidad, props.item.vit_b6).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Vitamina B12 : </strong> {{ getValor(props.item.cantidad, props.item.vit_b12).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Vitamina C : </strong> {{ getValor(props.item.cantidad, props.item.vit_c).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Vitamina D : </strong> {{ getValor(props.item.cantidad, props.item.vit_d).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Vitamina E : </strong> {{ getValor(props.item.cantidad, props.item.vit_e).toFixed(1)}}
-                </v-flex>
-                <v-flex xs4 md2>
-                  <strong>Vitamina K : </strong> {{ getValor(props.item.cantidad, props.item.vit_k).toFixed(1)}}
-                </v-flex>
-              </v-layout>
-            </v-card-text>
-          </v-card>
+          <detalle-propiedad-alimento :item="props.item"></detalle-propiedad-alimento>
         </template>
         <template slot="footer">
           <tr class="primary white--text">
@@ -172,6 +72,7 @@
 </template>
 
 <script>
+import DetallePropiedadAlimento from '@/components/Minuta/DetallePropiedadesAlimento'
 export default {
   data () {
     return {
@@ -190,6 +91,7 @@ export default {
     }
   },
   props: ['alimentosComida', 'totales'],
+  components: {DetallePropiedadAlimento},
   methods: {
     changeTotales () {
       let vm = this
