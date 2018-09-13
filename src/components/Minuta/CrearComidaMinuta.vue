@@ -1,5 +1,22 @@
 <template>
   <section>
+    <v-flex xs12 md8 >
+      <v-menu 
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-width="150"
+        offset-x>
+        <v-btn
+          slot="activator"
+          color="primary"
+          dark>
+          Ver Configuración
+        </v-btn>
+
+        <informacion-configuracion-minuta :configuracionMinuta="configuracion"></informacion-configuracion-minuta>
+        
+      </v-menu>
+    </v-flex>
     <v-select
       :items="allAlimentos"
       :search-input.sync="search"
@@ -7,7 +24,6 @@
       label="Busca tus Alimentos"
       item-text="nombre"
       persistent-hint
-      background-color="red"
       autocomplete
       cache-items
       return-object>
@@ -73,6 +89,7 @@
 
 <script>
 import DetallePropiedadAlimento from '@/components/Minuta/DetallePropiedadesAlimento'
+import InformacionConfiguracionMinuta from '@/components/Minuta/InformacionConfiguracionMinuta'
 export default {
   data () {
     return {
@@ -87,11 +104,12 @@ export default {
       ],
       rows_per_page_items: [{'text': 'Todos', 'value': -1}, 5, 10, 25],
       select: {},
-      search: ''
+      search: '',
+      menu: false
     }
   },
-  props: ['alimentosComida', 'totales'],
-  components: {DetallePropiedadAlimento},
+  props: ['alimentosComida', 'totales', 'configuracion'],
+  components: {DetallePropiedadAlimento, InformacionConfiguracionMinuta},
   methods: {
     changeTotales () {
       let vm = this
