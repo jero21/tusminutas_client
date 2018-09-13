@@ -52,7 +52,8 @@ export default {
       minutaService.save(minuta).then(data => {
         console.log(data)
       }, err => {
-        console.log(`error en la peticion: ${err}`)
+        console.log(`error en la peticion:`)
+        console.log(err)
       })
     },
     closeDialog () {
