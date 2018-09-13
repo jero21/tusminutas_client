@@ -4,11 +4,11 @@
     scrollable
     persistent 
     :overlay="false"
-    max-width="500px"
+    max-width="900px"
     transition="dialog-transition">
     <v-card>
       <v-toolbar color="primary" dark>
-        <v-toolbar-title> Configuracion Minuta </v-toolbar-title>
+        <v-toolbar-title> Configuración Minuta </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="closeDialog()">
           <v-icon>close</v-icon>
@@ -23,29 +23,51 @@
                   :search-input.sync="search"
                   v-model="select"
                   label="Busca las propiedades"
-                  item-text="nombre"
+                  item-text="nombre_real"
                   persistent-hint
-                  background-color="red"
                   autocomplete
                   cache-items
                   return-object>
                 </v-select>
               </v-flex>
               <v-flex xs12>
-                <template v-for="(configuracion, i) in configuracionMinuta">
-                  <tr :key="i">
-                    <td colspan="70%">
-                      <strong>Cantidad Maxima {{ configuracion.nombre}}</strong>
-                    </td>
-                    <td>
-                      <v-text-field
-                      v-model.number="configuracion.cant_maxima"
-                      class="mx-3 input-cantidad"
-                      type="Number">
-                    </v-text-field>
-                    </td>
-                  </tr>
-                </template>
+                <v-data-table
+                  id="scroll-target"
+                  style="max-height: 400px"
+                  :headers="headers"
+                  :items="configuracion_minuta"
+                  no-data-text=""
+                  disable-initial-sort
+                  hide-actions
+                  class="elevation-3 scroll-y">
+                  <template slot="items" slot-scope="props">
+                    <tr class="alimento">
+                      <td class="text-xs-left">{{ props.item.nombre }}</td>
+                      <td class="text-xs-left">
+                        <v-text-field
+                          v-model.number="props.item.cant_maxima"
+                          class="mx-3 input-cantidad"
+                          type="Number"
+                          flat>
+                        </v-text-field>
+                      </td>
+                      <template v-for="(plato, index) in props.item.configuracion_platos">
+                        <td class="text-xs-left" :key="index">
+                        <v-text-field
+                          v-model.number="plato.porcentaje"
+                          class="mx-3 input-porcentaje"
+                          type="Number"
+                          placeholder="%"
+                          flat>
+                        </v-text-field>
+                      </td>
+                      </template>
+                    </tr>
+                  </template>
+                </v-data-table>
+              </v-flex>
+              <v-flex xs12>
+                <v-btn @click="guardarConfiguracion()" color="primary" block raised>Guardar</v-btn>
               </v-flex>
             </v-layout>
         </v-container>
@@ -57,22 +79,71 @@
 <script>
 import {propiedadService} from '@/services/Propiedad.service'
 
+let configuracionPlato = [
+  {id_tipo_comida: 1, cant_maxima: 0},
+  {id_tipo_comida: 2, cant_maxima: 0},
+  {id_tipo_comida: 3, cant_maxima: 0},
+  {id_tipo_comida: 4, cant_maxima: 0},
+  {id_tipo_comida: 5, cant_maxima: 0},
+  {id_tipo_comida: 6, cant_maxima: 0},
+  {id_tipo_comida: 7, cant_maxima: 0}
+]
+
 export default {
   data () {
     return {
+      headers: [
+        {text: 'Nombre', align: 'left', sortable: false},
+        {text: 'Cantidad', align: 'left', sortable: false},
+        {text: 'Desayuno %', align: 'left', sortable: false},
+        {text: 'Almuerzo %', align: 'left', sortable: false},
+        {text: 'Once %', align: 'left', sortable: false},
+        {text: 'Cena %', align: 'left', sortable: false},
+        {text: 'Comida 1 %', align: 'left', sortable: false},
+        {text: 'Comida 2 %', align: 'left', sortable: false},
+        {text: 'Comida 3 %', align: 'left', sortable: false}
+      ],
       propiedades: [],
       search: '',
-      select: {}
+      select: {},
+      configuracion_minuta: []
     }
   },
   props: ['dialog', 'configuracionMinuta'],
-  mounted () {
+  created () {
     let vm = this
+    vm.configuracion = JSON.parse(JSON.stringify(vm.configuracionMinuta))
     propiedadService.query().then(data => {
       vm.propiedades = data.body
     })
   },
   methods: {
+    guardarConfiguracion () {
+      let vm = this
+      let configuracionPorPlato = [
+        {id_tipo_comida: 1, configuracion: []},
+        {id_tipo_comida: 2, configuracion: []},
+        {id_tipo_comida: 3, configuracion: []},
+        {id_tipo_comida: 4, configuracion: []},
+        {id_tipo_comida: 5, configuracion: []},
+        {id_tipo_comida: 6, configuracion: []},
+        {id_tipo_comida: 7, configuracion: []}
+      ]
+      vm.configuracion_minuta.forEach((propiedad) => {
+        propiedad.configuracion_platos.forEach((configuracion, i) => {
+          if (configuracion.porcentaje) {
+            configuracion.cant_maxima = configuracion.porcentaje * propiedad.cant_maxima / 100
+            let configuracionPlato = {
+              nombre: propiedad.nombre,
+              cant_maxima: configuracion.cant_maxima
+            }
+            configuracionPorPlato[i].configuracion.push(configuracionPlato)
+          }
+        })
+      })
+      vm.$emit('nuevaConfiguracion', vm.configuracion_minuta, configuracionPorPlato)
+      vm.closeDialog()
+    },
     closeDialog () {
       // this.dialog = false
       this.$emit('closeDialog')
@@ -82,13 +153,42 @@ export default {
     select (data) {
       let vm = this
       if (vm.search !== '') {
-        data.cant_maxima = 0
-        vm.configuracionMinuta.push(data)
+        let configuracion = {
+          id_propiedad: data.id,
+          nombre: data.nombre_real,
+          cant_maxima: 0,
+          configuracion_platos: JSON.parse(JSON.stringify(configuracionPlato))
+        }
+        vm.configuracion_minuta.push(configuracion)
         vm.select = {}
         vm.search = ''
       }
+    },
+    dialog (visible) {
+      if (visible) this.configuracion_minuta = JSON.parse(JSON.stringify(this.configuracionMinuta))
     }
   }
 }
 </script>
+
+<style scoped>
+  .card__text {
+    padding: 7px;
+  }
+
+  .input-cantidad {
+    margin: 0 !important; 
+    padding: 0;
+    width: 60px;
+    max-height: 40px;
+  }
+
+  .input-porcentaje {
+    margin: 0 !important; 
+    padding: 0;
+    width: 50px;
+    max-height: 40px;
+  }
+</style>
+
 
