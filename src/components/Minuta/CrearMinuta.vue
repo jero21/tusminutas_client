@@ -1,21 +1,29 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 md8 >
-      <v-expansion-panel>
-        <v-expansion-panel-content>
-          <div slot="header">TOTALES</div>
-          <v-card>
-            <v-card-text>
-              <strong>Cantidad : </strong> {{ totalCantidad }}
-            </v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+      <v-menu 
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-width="150"
+        offset-x>
+        <v-btn
+          slot="activator"
+          color="primary"
+          dark>
+          Ver Configuración
+        </v-btn>
+
+        <informacion-configuracion-minuta :configuracionMinuta="minuta.configuracion"></informacion-configuracion-minuta>
+        
+      </v-menu>
     </v-flex>
     <v-flex xs12 md4>
-      <v-btn @click="dialogConfiguracion = true">Configuración Minuta
+      <v-btn block @click="dialogConfiguracion = true">Configuración Minuta
         <v-icon right>settings</v-icon>
       </v-btn>
+    </v-flex>
+    <v-flex xs12>
+      <v-divider></v-divider>
     </v-flex>
     <v-flex xs12>
       <v-stepper value="1">
@@ -27,17 +35,17 @@
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content v-for="(comida, indexComida) in minuta.comidas" :key="comida.id" :step="indexComida + 1">
-            <crear-comida-minuta :alimentosComida="comida.alimentosMinuta" :totales.sync="comida.totales"></crear-comida-minuta>
+            <crear-comida-minuta :alimentosComida="comida.alimentosMinuta" :configuracion="minuta.configuracion_platos[indexComida].configuracion" :totales.sync="comida.totales"></crear-comida-minuta>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
     </v-flex>
     <v-flex offset-xs10 xs2>
-      <v-btn @click="dialogGuardar = true" color="primary">Crear</v-btn>
+      <v-btn block @click="dialogGuardar = true" color="primary">Crear</v-btn>
     </v-flex>
 
     <dialog-guardar-minta :minuta="minuta" @closeDialog="dialogGuardar = false" :dialog="dialogGuardar"></dialog-guardar-minta>
-    <configuracion-minuta :configuracionMinuta="configuracionMinuta" :dialog="dialogConfiguracion" @closeDialog="dialogConfiguracion = false" ></configuracion-minuta>
+    <configuracion-minuta :configuracionMinuta="minuta.configuracion" @nuevaConfiguracion="nuevaConfiguracion" :dialog="dialogConfiguracion" @closeDialog="dialogConfiguracion = false" ></configuracion-minuta>
 
 
   </v-layout>
@@ -47,6 +55,7 @@
 import CrearComidaMinuta from '@/components/Minuta/CrearComidaMinuta'
 import DialogGuardarMinta from '@/components/Minuta/DialogGuardarMinuta'
 import ConfiguracionMinuta from '@/components/Minuta/ConfiguracionMinuta'
+import InformacionConfiguracionMinuta from '@/components/Minuta/InformacionConfiguracionMinuta'
 
 let totales = {cantidad: 0, humedad: 0, energia: 0, proteinas: 0, carbohidratos: 0}
 let comidas = [
@@ -55,7 +64,8 @@ let comidas = [
   {id: 3, nombre: 'Once', alimentosMinuta: [], totales: totales},
   {id: 4, nombre: 'Cena', alimentosMinuta: [], totales: totales},
   {id: 5, nombre: 'Colación 1', alimentosMinuta: [], totales: totales},
-  {id: 6, nombre: 'Colación 2', alimentosMinuta: [], totales: totales}
+  {id: 6, nombre: 'Colación 2', alimentosMinuta: [], totales: totales},
+  {id: 7, nombre: 'Colación 3', alimentosMinuta: [], totales: totales}
 ]
 
 export default {
@@ -65,19 +75,34 @@ export default {
         nombre: '',
         descripcion: '',
         id_tipo_minuta: 1,
-        comidas: comidas
+        comidas: comidas,
+        configuracion: [],
+        configuracion_platos: [
+          {id_tipo_comida: 1, configuracion: []},
+          {id_tipo_comida: 2, configuracion: []},
+          {id_tipo_comida: 3, configuracion: []},
+          {id_tipo_comida: 4, configuracion: []},
+          {id_tipo_comida: 5, configuracion: []},
+          {id_tipo_comida: 6, configuracion: []},
+          {id_tipo_comida: 7, configuracion: []}
+        ]
       },
-      configuracionMinuta: [],
       dialogGuardar: false,
-      dialogConfiguracion: false
+      dialogConfiguracion: false,
+      menu: false
     }
   },
   components: {
     CrearComidaMinuta,
     DialogGuardarMinta,
-    ConfiguracionMinuta
+    ConfiguracionMinuta,
+    InformacionConfiguracionMinuta
   },
   methods: {
+    nuevaConfiguracion (configuracion, configuracionPorPlato) {
+      this.minuta.configuracion = configuracion
+      this.minuta.configuracion_platos = configuracionPorPlato
+    }
   },
   computed: {
     totalCantidad () {
