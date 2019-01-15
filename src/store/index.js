@@ -1,11 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+/*
 import {alimentoService} from '@/services/Alimento.service'
 import {alimentoNutricionistaService} from '@/services/AlimentoNutricionista.service'
+*/
+import minutaModule from './modules/minuta/index'
+import alimentosModule from './modules/alimentos/index'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  modules: {
+    minuta: minutaModule,
+    alimentos: alimentosModule
+  } /*,
   state: {
     alimentos: [],
     misAlimentos: []
@@ -51,4 +59,5 @@ export default new Vuex.Store({
       })
     }
   }
+  */
 })

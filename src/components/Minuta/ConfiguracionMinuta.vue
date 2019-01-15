@@ -42,7 +42,7 @@
                   class="elevation-3 scroll-y">
                   <template slot="items" slot-scope="props">
                     <tr class="alimento">
-                      <td class="text-xs-left">{{ props.item.nombre }}</td>
+                      <td class="text-xs-left">{{ props.item.nombre_real }}</td>
                       <td class="text-xs-left">
                         <v-text-field
                           v-model.number="props.item.cant_maxima"
@@ -80,13 +80,13 @@
 import {propiedadService} from '@/services/Propiedad.service'
 
 let configuracionPlato = [
-  {id_tipo_comida: 1, cant_maxima: 0},
-  {id_tipo_comida: 2, cant_maxima: 0},
-  {id_tipo_comida: 3, cant_maxima: 0},
-  {id_tipo_comida: 4, cant_maxima: 0},
-  {id_tipo_comida: 5, cant_maxima: 0},
-  {id_tipo_comida: 6, cant_maxima: 0},
-  {id_tipo_comida: 7, cant_maxima: 0}
+  {id_tipo_comida: 1, cant_maxima: 0, configuracion: []},
+  {id_tipo_comida: 2, cant_maxima: 0, configuracion: []},
+  {id_tipo_comida: 3, cant_maxima: 0, configuracion: []},
+  {id_tipo_comida: 4, cant_maxima: 0, configuracion: []},
+  {id_tipo_comida: 5, cant_maxima: 0, configuracion: []},
+  {id_tipo_comida: 6, cant_maxima: 0, configuracion: []},
+  {id_tipo_comida: 7, cant_maxima: 0, configuracion: []}
 ]
 
 export default {
@@ -109,10 +109,9 @@ export default {
       configuracion_minuta: []
     }
   },
-  props: ['dialog', 'configuracionMinuta'],
+  props: ['dialog'],
   created () {
     let vm = this
-    vm.configuracion = JSON.parse(JSON.stringify(vm.configuracionMinuta))
     propiedadService.query().then(data => {
       vm.propiedades = data.body
     })
@@ -120,28 +119,22 @@ export default {
   methods: {
     guardarConfiguracion () {
       let vm = this
-      let configuracionPorPlato = [
-        {id_tipo_comida: 1, configuracion: []},
-        {id_tipo_comida: 2, configuracion: []},
-        {id_tipo_comida: 3, configuracion: []},
-        {id_tipo_comida: 4, configuracion: []},
-        {id_tipo_comida: 5, configuracion: []},
-        {id_tipo_comida: 6, configuracion: []},
-        {id_tipo_comida: 7, configuracion: []}
-      ]
+      let configuracionPorPlato = JSON.parse(JSON.stringify(configuracionPlato))
       vm.configuracion_minuta.forEach((propiedad) => {
-        propiedad.configuracion_platos.forEach((configuracion, i) => {
+        propiedad.configuracion_platos.forEach((configuracion, indexComida) => {
           if (configuracion.porcentaje) {
             configuracion.cant_maxima = configuracion.porcentaje * propiedad.cant_maxima / 100
             let configuracionPlato = {
+              nombre_real: propiedad.nombre_real,
               nombre: propiedad.nombre,
               cant_maxima: configuracion.cant_maxima
             }
-            configuracionPorPlato[i].configuracion.push(configuracionPlato)
+            configuracionPorPlato[indexComida].configuracion.push(configuracionPlato)
           }
         })
       })
-      vm.$emit('nuevaConfiguracion', vm.configuracion_minuta, configuracionPorPlato)
+      vm.$store.commit('minuta/actualizarConfiguracion', vm.configuracion_minuta)
+      vm.$store.dispatch('minuta/agregarConfiguracionComida', configuracionPorPlato)
       vm.closeDialog()
     },
     closeDialog () {
@@ -155,7 +148,8 @@ export default {
       if (vm.search !== '') {
         let configuracion = {
           id_propiedad: data.id,
-          nombre: data.nombre_real,
+          nombre_real: data.nombre_real,
+          nombre: data.nombre,
           cant_maxima: 0,
           configuracion_platos: JSON.parse(JSON.stringify(configuracionPlato))
         }
@@ -163,9 +157,6 @@ export default {
         vm.select = {}
         vm.search = ''
       }
-    },
-    dialog (visible) {
-      if (visible) this.configuracion_minuta = JSON.parse(JSON.stringify(this.configuracionMinuta))
     }
   }
 }

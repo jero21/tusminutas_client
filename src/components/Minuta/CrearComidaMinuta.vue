@@ -1,22 +1,5 @@
 <template>
   <section>
-    <v-flex xs12 md8 >
-      <v-menu 
-        v-model="menu"
-        :close-on-content-click="false"
-        :nudge-width="150"
-        offset-x>
-        <v-btn
-          slot="activator"
-          color="primary"
-          dark>
-          Ver Configuración
-        </v-btn>
-
-        <informacion-configuracion-minuta :configuracionMinuta="configuracion"></informacion-configuracion-minuta>
-        
-      </v-menu>
-    </v-flex>
     <v-select
       :items="allAlimentos"
       :search-input.sync="search"
@@ -28,129 +11,63 @@
       cache-items
       return-object>
     </v-select>
-    <v-data-table
-      id="scroll-target"
-      style="max-height: 400px"
-      :headers="headers"
-      :items="alimentosComida"
-      no-data-text=""
-      :rows-per-page-items="rows_per_page_items"
-      rows-per-page-text="Datos por pagina"
-      class="elevation-3 scroll-y">
-        <template slot="items" slot-scope="props">
-          <tr class="alimento">
-            <td class="text-xs-left">{{ props.item.nombre }}</td>
-            <td class="text-xs-left">
-              <v-text-field
-                v-model.number="props.item.cantidad"
-                class="mx-3 input-cantidad"
-                type="Number"
-                @input="changeTotales"
-                flat>
-              </v-text-field>
-            </td>
-            <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.humedad).toFixed(1) }}</td>
-            <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.energia).toFixed(1) }}</td>
-            <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.proteinas).toFixed(1) }}</td>
-            <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.fibra).toFixed(1) }}</td>
-            <td colspan="100%" class="text-xs-left">
+    <v-flex xs12>
+      <v-expansion-panel>
+        <v-expansion-panel-content>
+          <div slot="header">Configuración</div>
+          <v-card>
+            <v-card-text>
               <v-layout row wrap>
-                <v-flex xs12 md6>
-                  <v-btn @click="alimentosComida.splice(props.index,1); changeTotales()" small flat color="red" icon>
-                    <v-icon>delete</v-icon>
-                  </v-btn>
-                </v-flex>
-                <v-flex xs12 md6>
-                 <v-btn @click="props.expanded = !props.expanded" small flat icon>
-                  <v-icon v-if="!props.expanded">expand_more</v-icon>
-                  <v-icon v-else>expand_less</v-icon>
-                 </v-btn>
-                </v-flex>
+                <v-flex xs6 md3 lg3 v-for="(propiedadConfiguracion, index) in comida.configuracion" :key="index">
+                  <v-text-field :error="totales[propiedadConfiguracion.nombre] > propiedadConfiguracion.cant_maxima" readonly :value="propiedadConfiguracion.cant_maxima" :label="propiedadConfiguracion.nombre_real" color="red"></v-text-field>
+              </v-flex>
               </v-layout>
-            </td>
-          </tr>
-        </template>
-        <template slot="expand" slot-scope="props">
-          <detalle-propiedad-alimento :item="props.item"></detalle-propiedad-alimento>
-        </template>
-        <template slot="footer">
-          <tr class="primary white--text">
-            <td><strong>Totales</strong></td>
-            <td><strong>{{ totales.cantidad}}</strong></td>
-            <td><strong>{{ totales.humedad.toFixed(1)}}</strong></td>
-            <td><strong>{{ totales.energia.toFixed(1)}}</strong></td>
-            <td><strong>{{ totales.proteinas.toFixed(1)}}</strong></td>
-            <td colspan="100%"><strong>{{ totales.carbohidratos.toFixed(1) }}</strong></td>
-          </tr>
-        </template>
-    </v-data-table>
+            </v-card-text>
+          </v-card>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-flex>
+    <tabla-alimentos-comida ref="tablaAlimentos" :edit="true" :indexComida="indexComida" :comida="comida"></tabla-alimentos-comida>
+    <v-flex xs12>
+      <v-expansion-panel>
+        <v-expansion-panel-content>
+          <div slot="header">Totales Comida</div>
+          <totales :totales="totales"></totales>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-flex>
   </section>
 </template>
 
 <script>
-import DetallePropiedadAlimento from '@/components/Minuta/DetallePropiedadesAlimento'
-import InformacionConfiguracionMinuta from '@/components/Minuta/InformacionConfiguracionMinuta'
+import TablaAlimentosComida from '@/components/Minuta/TablaAlimentosComida'
+import Totales from '@/components/Minuta/Totales'
 export default {
   data () {
     return {
-      headers: [
-        {text: 'Alimento', value: 'nombre', align: 'left', sortable: false},
-        {text: 'Cantidad (gr o ml)', value: 'cantidad', align: 'left', sortable: false},
-        {text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: false},
-        {text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: false},
-        {text: 'Proteínas (gr)', value: 'proteinas', align: 'left', sortable: false},
-        {text: 'Carbohidratos (gr)', value: 'fibra', align: 'left', sortable: false},
-        {text: 'Acciones', align: 'left', sortable: false}
-      ],
-      rows_per_page_items: [{'text': 'Todos', 'value': -1}, 5, 10, 25],
       select: {},
       search: '',
       menu: false
     }
   },
-  props: ['alimentosComida', 'totales', 'configuracion'],
-  components: {DetallePropiedadAlimento, InformacionConfiguracionMinuta},
-  methods: {
-    changeTotales () {
-      let vm = this
-      let totales = {cantidad: 0, humedad: 0, energia: 0, proteinas: 0, carbohidratos: 0}
-      vm.alimentosComida.forEach((alimento) => {
-        totales.cantidad += alimento.cantidad
-        totales.humedad += vm.getValor(alimento.cantidad, alimento.humedad)
-        totales.energia += vm.getValor(alimento.cantidad, alimento.energia)
-        totales.proteinas += vm.getValor(alimento.cantidad, alimento.proteinas)
-        totales.carbohidratos += vm.getValor(alimento.cantidad, alimento.fibra)
-      })
-      vm.$emit('update:totales', totales)
-    },
-    getValor (cantidad, propiedad) {
-      let valor = (cantidad * propiedad) / 100
-      return valor
-    },
-    getTotal () {
-      let vm = this
-      let total = 0
-      vm.alimentosComida.forEach((alimento) => {
-        total += alimento.cantidad
-      })
-      return total
-    }
-  },
+  props: ['indexComida', 'comida'],
+  components: {TablaAlimentosComida, Totales},
   computed: {
     allAlimentos () {
       return this.$store.getters.allAlimentos
+    },
+    totales () {
+      return this.$store.getters['minuta/totalComida'](this.indexComida)
     }
   },
   watch: {
     select (alimento) {
       if (this.search !== '') {
         let newAlimento = JSON.parse(JSON.stringify(alimento))
-        newAlimento.cantidad = 100
-        this.alimentosComida.push(newAlimento)
+        let indexComida = this.indexComida
+        this.$store.dispatch('minuta/agregarAlimentoEnComida', {alimento: newAlimento, indexComida})
         this.select = {}
         this.search = ''
-        this.changeTotales()
-        // this.$emit('update:alimentosComida', this.alimentosComida)
       }
     }
   }
@@ -158,19 +75,5 @@ export default {
 </script>
 
 <style scoped>
-  .input-cantidad {
-    margin: 0 !important; 
-    padding: 0;
-    width: 70px;
-    max-height: 40px;
-  }
 
-  .table.table tbody td, table.table tbody th {
-    max-height: 20px;
-  }
-
-  table.table tfoot tr {
-    height: 35px;
-  }
 </style>
-

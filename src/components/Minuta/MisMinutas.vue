@@ -15,10 +15,10 @@
               <v-text-field :rows="2" multi-line readonly :value="minuta.descripcion || ''" label="Descripción" color="orange"></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-text-field readonly value="2018-08-02" label="Fecha de Creación" color="orange"></v-text-field>
+              <v-text-field readonly :value="moment(minuta.created_at).format('DD-MM-YYYY')" label="Fecha de Creación" color="orange"></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-btn @click="" dark block color="orange">Ver Minuta</v-btn>
+              <v-btn @click="goTo('ver-minuta', {id: minuta.id})" dark block color="orange">Ver Minuta</v-btn>
             </v-flex>
           </v-card-text>
         </v-card>
@@ -35,6 +35,11 @@ export default {
       minutas: []
     }
   },
+  methods: {
+    goTo (ruta, params) {
+      this.$router.push({name: ruta, params: params})
+    }
+  },
   created () {
     let vm = this
     minutaService.query().then(data => {
@@ -46,3 +51,4 @@ export default {
   }
 }
 </script>
+

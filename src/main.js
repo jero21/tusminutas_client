@@ -10,6 +10,9 @@ import 'typeface-roboto/index.css'
 import InterceptorApi from '@/services/Interceptor.service'
 import store from '@/store/index'
 import GSignInButton from 'vue-google-signin-button'
+import moment from 'moment'
+
+Vue.prototype.moment = moment
 Vue.use(GSignInButton)
 
 Vue.use(Vuetify, { theme: {

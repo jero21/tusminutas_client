@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MinutaApp from '@/components/App/MinutaApp'
 import MisMinutas from '@/components/Minuta/MisMinutas'
+import VerMinuta from '@/components/Minuta/VerMinuta'
 import CrearMinuta from '@/components/Minuta/CrearMinuta'
 import TablaComposicion from '@/components/TablaComposicion/TablaComposicion'
 import MisAlimentos from '@/components/Alimentos/MisAlimentos'
@@ -22,22 +23,27 @@ const router = new Router({
       children: [
         {
           path: 'minutas',
-          name: 'Mis Minutas',
+          name: 'mis-minutas',
           component: MisMinutas
         },
         {
+          path: 'minutas/:id',
+          name: 'ver-minuta',
+          component: VerMinuta
+        },
+        {
           path: 'crear-minuta',
-          name: 'Crear Minuta',
+          name: 'crear-minuta',
           component: CrearMinuta
         },
         {
           path: 'tabla-composicion',
-          name: 'Tabla de Composición',
+          name: 'tabla-composicion',
           component: TablaComposicion
         },
         {
           path: 'mis-alimentos',
-          name: 'Mis Alimentos',
+          name: 'mis-alimentos',
           component: MisAlimentos
         }
       ]

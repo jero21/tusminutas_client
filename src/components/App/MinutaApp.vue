@@ -16,34 +16,34 @@
       <v-list>
         <v-subheader>Menu</v-subheader>
 
-        <v-list-tile :color="active('Mis Minutas')" @click="goTo('minutas')">
+        <v-list-tile :color="active('mis-minutas')" @click="goTo('mis-minutas')">
           <v-list-tile-action>
-            <v-icon :color="active('Mis Minutas')">assignment</v-icon>
+            <v-icon :color="active('mis-minutas')">assignment</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Mis Minutas</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile :color="active('Crear Minuta')" @click="goTo('crear-minuta')">
+        <v-list-tile :color="active('crear-minuta')" @click="goTo('crear-minuta')">
           <v-list-tile-action>
-            <v-icon :color="active('Crear Minuta')">add</v-icon>
+            <v-icon :color="active('crear-minuta')">add</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Crear Minuta</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile :color="active('Tabla de Composición')" @click="goTo('tabla-composicion')">
+        <v-list-tile :color="active('tabla-composicion')" @click="goTo('tabla-composicion')">
           <v-list-tile-action>
-            <v-icon :color="active('Tabla de Composición')">list</v-icon>
+            <v-icon :color="active('tabla-composicion')">list</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Tabla de Composición</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile :color="active('Mis Alimentos')" @click="goTo('mis-alimentos')">
+        <v-list-tile :color="active('mis-alimentos')" @click="goTo('mis-alimentos')">
           <v-list-tile-action>
             <v-icon>local_pizza</v-icon>
           </v-list-tile-action>
@@ -122,8 +122,8 @@ export default {
     })
   },
   methods: {
-    goTo (ruta) {
-      this.$router.push(ruta)
+    goTo (name) {
+      this.$router.push({name: name})
     },
     active (ruta) {
       if (ruta === this.$route.name) return 'primary'

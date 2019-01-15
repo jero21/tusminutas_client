@@ -40,17 +40,24 @@ import { minutaService } from '@/services/Minuta.service'
 export default {
   data () {
     return {
-      valid: false
+      valid: false,
+      minuta: {
+        nombre: '',
+        descripcion: ''
+      }
     }
   },
-  props: ['dialog', 'minuta'],
+  props: ['dialog'],
   methods: {
     guardarMinuta (data) {
-      // let vm = this
-      let minuta = JSON.parse(JSON.stringify(data))
+      let vm = this
+      vm.$store.dispatch('minuta/agregarInformacionMinuta', data)
+      let minutaState = vm.$store.getters['minuta/minutaActual']
+      let minuta = JSON.parse(JSON.stringify(minutaState))
       minuta.comidas = JSON.stringify(minuta.comidas)
       minutaService.save(minuta).then(data => {
-        console.log(data)
+        let minuta = data.body.minuta
+        vm.$router.push({name: 'ver-minuta', params: {id: minuta.id}})
       }, err => {
         console.log(`error en la peticion:`)
         console.log(err)
@@ -64,4 +71,3 @@ export default {
   }
 }
 </script>
-
