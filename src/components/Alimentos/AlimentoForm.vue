@@ -228,7 +228,7 @@ export default {
     saveAlimento (alimento) {
       let vm = this
       alimentoNutricionistaService.save(alimento).then(data => {
-        vm.$emit('newAlimento', data)
+        vm.$store.dispatch('loadMyAlimentos')
         vm.closeDialog()
       })
     },
