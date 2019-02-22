@@ -28,7 +28,7 @@
                   <v-text-field readonly :value="configuracion.cant_maxima" label="Cantidad Maxima" color="orange"></v-text-field>
                 </v-flex>
                 <v-flex xs6 md2 lg2 v-for="comida in configuracion.configuracion_tipo_comida" :key="comida.id">
-                  <v-text-field readonly :value="comida.porcentaje + '%'" :label="comida.tipo_comida.nombre" color="orange"></v-text-field>
+                  <v-text-field readonly :value="comida.cant_maxima" :label="comida.tipo_comida.nombre" color="orange"></v-text-field>
                 </v-flex>
               </v-layout>
             </v-flex>
