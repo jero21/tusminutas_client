@@ -43,21 +43,13 @@
                   <template slot="items" slot-scope="props">
                     <tr class="alimento">
                       <td class="text-xs-left">{{ props.item.nombre_real }}</td>
-                      <td class="text-xs-left">
-                        <v-text-field
-                          v-model.number="props.item.cant_maxima"
-                          class="mx-3 input-cantidad"
-                          type="Number"
-                          flat>
-                        </v-text-field>
-                      </td>
                       <template v-for="(plato, index) in props.item.configuracion_platos">
                         <td class="text-xs-left" :key="index">
                         <v-text-field
-                          v-model.number="plato.porcentaje"
+                          v-model.number="plato.cant_maxima"
                           class="mx-3 input-porcentaje"
                           type="Number"
-                          placeholder="%"
+                          placeholder="gr"
                           flat>
                         </v-text-field>
                       </td>
@@ -94,14 +86,13 @@ export default {
     return {
       headers: [
         {text: 'Nombre', align: 'left', sortable: false},
-        {text: 'Cantidad', align: 'left', sortable: false},
-        {text: 'Desayuno %', align: 'left', sortable: false},
-        {text: 'Almuerzo %', align: 'left', sortable: false},
-        {text: 'Once %', align: 'left', sortable: false},
-        {text: 'Cena %', align: 'left', sortable: false},
-        {text: 'Comida 1 %', align: 'left', sortable: false},
-        {text: 'Comida 2 %', align: 'left', sortable: false},
-        {text: 'Comida 3 %', align: 'left', sortable: false}
+        {text: 'Desayuno', align: 'left', sortable: false},
+        {text: 'Almuerzo', align: 'left', sortable: false},
+        {text: 'Once', align: 'left', sortable: false},
+        {text: 'Cena', align: 'left', sortable: false},
+        {text: 'Comida 1', align: 'left', sortable: false},
+        {text: 'Comida 2', align: 'left', sortable: false},
+        {text: 'Comida 3', align: 'left', sortable: false}
       ],
       propiedades: [],
       search: '',
@@ -122,8 +113,7 @@ export default {
       let configuracionPorPlato = JSON.parse(JSON.stringify(configuracionPlato))
       vm.configuracion_minuta.forEach((propiedad) => {
         propiedad.configuracion_platos.forEach((configuracion, indexComida) => {
-          if (configuracion.porcentaje) {
-            configuracion.cant_maxima = configuracion.porcentaje * propiedad.cant_maxima / 100
+          if (configuracion.cant_maxima) {
             let configuracionPlato = {
               nombre_real: propiedad.nombre_real,
               nombre: propiedad.nombre,
@@ -177,7 +167,7 @@ export default {
   .input-porcentaje {
     margin: 0 !important; 
     padding: 0;
-    width: 50px;
+    width: 70px;
     max-height: 40px;
   }
 </style>
