@@ -21,13 +21,13 @@
         <td class="text-xs-left">{{ props.item.grupo }}</td>
         <td class="text-xs-left">{{ props.item.subgrupo }}</td>
         <td class="text-xs-left">
-          <v-btn fab dark small color="primary">
+          <v-btn @click="verAlimento(props.item)" fab dark small color="primary">
             <v-icon dark>visibility</v-icon>
           </v-btn>
-          <v-btn fab dark small color="green">
+          <v-btn @click="editarAlimento(props.item)" fab dark small color="green">
             <v-icon dark>edit</v-icon>
           </v-btn>
-          <v-btn fab dark small color="red">
+          <v-btn @click="alimento = props.item; dialogEliminar = true" fab dark small color="red">
             <v-icon dark>delete</v-icon>
           </v-btn>
         </td>
@@ -36,16 +36,33 @@
     </v-flex>
     </v-layout>
 
-    <alimento-form :dialog="dialog" @closeDialog="dialog = false" @newAlimento="pushAlimento"></alimento-form>
+    <alimento-form :dialog="dialog" :alimento="alimento" :type="formType" @closeDialog="dialog = false" @newAlimento="pushAlimento"></alimento-form>
 
-    <v-btn @click="dialog = true" bottom fixed right fab dark color="primary">
+    <v-btn @click="crearAlimento()" bottom fixed right fab dark color="primary">
       <v-icon dark>add</v-icon>
     </v-btn>
+
+    <v-dialog v-model="dialogEliminar" persistent max-width="300px">
+      <v-card>
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">Eliminar Alimento</h3>
+              <div>Esta seguro(a) de eliminar el alimento <strong>{{alimento.nombre}}</strong></div>
+            </div>
+          </v-card-title>
+          <v-card-actions>
+            <v-btn @click="borrarAlimento(alimento.id)" outline color="red">Confirmar</v-btn>
+            <v-btn @click="dialogEliminar = false" outline flat>Cancelar</v-btn>
+          </v-card-actions>
+        </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
 <script>
 import AlimentoForm from '@/components/Alimentos/AlimentoForm'
+import AlimentoModel from '@/models/Alimento.model'
+import {alimentoNutricionistaService} from '@/services/AlimentoNutricionista.service'
 export default {
   data () {
     return {
@@ -56,7 +73,10 @@ export default {
         {text: '', value: '', align: 'left', sortable: false}
       ],
       loadingTabla: true,
-      dialog: false
+      dialog: false,
+      dialogEliminar: false,
+      formType: '',
+      alimento: AlimentoModel
     }
   },
   components: {AlimentoForm},
@@ -71,6 +91,32 @@ export default {
   methods: {
     pushAlimento (alimento) {
       console.log(alimento)
+    },
+    crearAlimento () {
+      let vm = this
+      vm.alimento = AlimentoModel
+      vm.formType = 'crear'
+      vm.dialog = true
+    },
+    verAlimento (alimento) {
+      let vm = this
+      vm.alimento = JSON.parse(JSON.stringify(alimento))
+      vm.formType = 'ver'
+      vm.dialog = true
+    },
+    editarAlimento (alimento) {
+      let vm = this
+      vm.alimento = JSON.parse(JSON.stringify(alimento))
+      vm.formType = 'editar'
+      vm.dialog = true
+    },
+    borrarAlimento (id) {
+      let vm = this
+      alimentoNutricionistaService.destroy(id).then(data => {
+        console.log(data)
+        vm.$store.dispatch('loadMyAlimentos')
+        vm.dialogEliminar = false
+      })
     }
   },
   computed: {
