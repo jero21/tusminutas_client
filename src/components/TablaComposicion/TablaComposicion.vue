@@ -100,7 +100,8 @@ export default {
         model: false,
         color: 'success',
         message: 'ee'
-      }
+      },
+      loadingTabla: true
     }
   },
   mounted () {
@@ -133,6 +134,7 @@ export default {
         })
       }, () => {
         vm.showSnackbar('error', 'Error al cargar los alimentos')
+        vm.loadingTabla = false
       })
     },
     showSnackbar (color, message) {
@@ -140,7 +142,6 @@ export default {
       vm.snackbar.color = color
       vm.snackbar.message = message
       vm.snackbar.model = true
-      console.log(message)
     }
   },
   computed: {
@@ -166,9 +167,6 @@ export default {
           return alimento.grupo === grupo
         })
       }
-    },
-    loadingTabla () {
-      return this.alimentos.length === 0
     }
   }
 }
