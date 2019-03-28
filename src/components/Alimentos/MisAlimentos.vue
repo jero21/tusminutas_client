@@ -1,11 +1,5 @@
 <template>
   <v-layout row wrap>
-    <v-flex xs12>
-      <h3 class="title">Mis Alimentos</h3>
-    </v-flex>
-    <v-flex xs6>
-      <v-divider></v-divider>
-    </v-flex>
     <v-layout row wrap>
       <v-flex xs12 md10>
       <v-data-table
