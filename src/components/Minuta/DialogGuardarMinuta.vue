@@ -57,7 +57,7 @@ export default {
       minuta.comidas = JSON.stringify(minuta.comidas)
       minutaService.save(minuta).then(data => {
         let minuta = data.body.minuta
-        vm.$router.push({name: 'ver-minuta', params: {id: minuta.id}})
+        vm.$router.push({path: `/minutas/${minuta.id}`})
       }, err => {
         console.log(`error en la peticion:`)
         console.log(err)
