@@ -23,27 +23,27 @@ const router = new Router({
       children: [
         {
           path: 'minutas',
-          name: 'mis-minutas',
+          name: 'Mis Minutas',
           component: MisMinutas
         },
         {
           path: 'minutas/:id',
-          name: 'ver-minuta',
+          name: 'Ver Minuta',
           component: VerMinuta
         },
         {
           path: 'crear-minuta',
-          name: 'crear-minuta',
+          name: 'Crear Minuta',
           component: CrearMinuta
         },
         {
           path: 'tabla-composicion',
-          name: 'tabla-composicion',
+          name: 'Tabla de Composicion',
           component: TablaComposicion
         },
         {
           path: 'mis-alimentos',
-          name: 'mis-alimentos',
+          name: 'Mis Alimentos',
           component: MisAlimentos
         }
       ]
@@ -56,6 +56,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  credentials.isLogin()
   if (credentials.isLogin()) {
     if (to.path === '/login') next({path: '/minutas'})
     else next()
