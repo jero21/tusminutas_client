@@ -5,6 +5,7 @@
       :mini-variant="miniVariant"
       :clipped="clipped"
       v-model="drawer"
+      width="280"
       enable-resize-watcher
       fixed
       app>
@@ -13,42 +14,32 @@
         dark>
         <v-toolbar-title>Tu Minuta</v-toolbar-title>
       </v-toolbar>
+      <v-layout style="padding-top:6px;" row wrap>
+        <v-flex xs3>
+          <img class="img-profile" :src="credentialService.getCurrentUser().avatar" alt="">
+        </v-flex>
+        <v-flex style="padding-top:5px;" xs9>
+          <v-layout row wrap>
+            <v-flex><strong>{{credentialService.getCurrentUser().name}}</strong></v-flex>
+          </v-layout>
+          <v-layout row wrap>
+            <v-flex>{{credentialService.getCurrentUser().email}}</v-flex>
+          </v-layout>
+          <v-layout row wrap>
+            <v-btn @click="logout" style="margin:0px;" small outline color="error">Cerrar Sesión</v-btn>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+      
       <v-list>
         <v-subheader>Menu</v-subheader>
 
-        <v-list-tile :color="active('mis-minutas')" @click="goTo('mis-minutas')">
+        <v-list-tile v-for="(item, i) in items" :key="i" :color="active(item.route)" @click="goTo(item.route)">
           <v-list-tile-action>
-            <v-icon :color="active('mis-minutas')">assignment</v-icon>
+            <v-icon :color="active(item.route)">{{ item.icon }}</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Mis Minutas</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-list-tile :color="active('crear-minuta')" @click="goTo('crear-minuta')">
-          <v-list-tile-action>
-            <v-icon :color="active('crear-minuta')">add</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Crear Minuta</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-list-tile :color="active('tabla-composicion')" @click="goTo('tabla-composicion')">
-          <v-list-tile-action>
-            <v-icon :color="active('tabla-composicion')">list</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Tabla de Composición</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <v-list-tile :color="active('mis-alimentos')" @click="goTo('mis-alimentos')">
-          <v-list-tile-action>
-            <v-icon>local_pizza</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Mis Alimentos</v-list-tile-title>
+            <v-list-tile-title>{{ item.nombre }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
@@ -81,18 +72,6 @@
       dark>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title v-text="this.$route.name"></v-toolbar-title>
-      <v-spacer></v-spacer>
-      {{credentialService.getCurrentUser()}}
-          <v-menu bottom left>
-            <v-btn icon slot="activator" dark>
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-            <v-list>
-              <v-list-tile @click="logout">
-                <v-list-tile-title>Cerrar Sesión</v-list-tile-title>
-              </v-list-tile>
-            </v-list>
-          </v-menu>
     </v-toolbar>
     <v-content>
       <v-container grid-list-xl>
@@ -111,7 +90,13 @@ export default {
       clipped: false,
       drawer: true,
       fixed: false,
-      miniVariant: false
+      miniVariant: false,
+      items: [
+        {nombre: 'Mis Minutas', route: 'minutas', icon: 'assignment'},
+        {nombre: 'Crear Minuta', route: 'crear-minuta', icon: 'add'},
+        {nombre: 'Tabla de Composición', route: 'tabla-composicion', icon: 'list'},
+        {nombre: 'Mis Alimentos', route: 'mis-alimentos', icon: 'local_pizza'}
+      ]
     }
   },
   created () {
@@ -122,11 +107,11 @@ export default {
     })
   },
   methods: {
-    goTo (name) {
-      this.$router.push({name: name})
+    goTo (route) {
+      this.$router.push({path: `/${route}`})
     },
     active (ruta) {
-      if (ruta === this.$route.name) return 'primary'
+      if (this.$route.path.includes(ruta)) return 'primary'
     },
     logout () {
       let vm = this
@@ -149,6 +134,11 @@ export default {
 
   .table.table thead th {
     font-size: 13px;
+  }
+
+  .img-profile {
+    margin: 5px;
+    border-radius: 30px;
   }
 
 </style>
