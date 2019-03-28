@@ -1,5 +1,4 @@
 <template>
-  <v-container grid-list-md>
     <v-layout row wrap>
       <v-flex v-for="minuta in minutas" :key="minuta.id" xs12 md4>
         <v-card>
@@ -18,13 +17,12 @@
               <v-text-field readonly :value="moment(minuta.created_at).format('DD-MM-YYYY')" label="Fecha de Creación" color="orange"></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-btn @click="goTo('ver-minuta', {id: minuta.id})" dark block color="orange">Ver Minuta</v-btn>
+              <v-btn @click="goTo('minutas', {id: minuta.id})" dark block color="orange">Ver Minuta</v-btn>
             </v-flex>
           </v-card-text>
         </v-card>
       </v-flex>
-    </v-layout>
-    <!-- Dialog Eliminacion -->
+      <!-- Dialog Eliminacion -->
     <v-dialog v-model="dialog" persistent max-width="300px">
       <v-card>
           <v-card-title primary-title>
@@ -52,7 +50,7 @@
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
-  </v-container>
+    </v-layout>
 </template>
 
 <script>
@@ -72,7 +70,7 @@ export default {
   },
   methods: {
     goTo (ruta, params) {
-      this.$router.push({name: ruta, params: params})
+      this.$router.push({path: `/${ruta}/${params.id}`})
     },
     borrarMinuta (id) {
       let vm = this
