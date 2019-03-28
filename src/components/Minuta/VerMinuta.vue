@@ -1,7 +1,6 @@
 <template>
-  <v-container fluid grid-list-md>
-    <v-card>
-      <v-card-text>
+  <v-card>
+    <v-card-text>
         <v-layout row wrap>
           <v-flex xs8>
             <h5 class="headline">{{ minuta.nombre }}</h5>
@@ -19,7 +18,7 @@
             <v-flex xs12>
               <h3 class="title">Configuración Minuta</h3>
             </v-flex>
-            <v-flex xs12 v-for="configuracion in minuta.configuracion_minutas" :key="configuracion.id">
+            <v-flex xs12 v-for="configuracion in minuta.configuracion_minutas" :key="'conf'+configuracion.id">
               <v-layout row wrap>
                 <v-flex xs12>
                   <h4>{{ configuracion.propiedad.nombre_real }}</h4>
@@ -55,9 +54,8 @@
             </v-flex>
           </template>
         </v-layout>
-      </v-card-text>
-    </v-card>
-  </v-container>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
