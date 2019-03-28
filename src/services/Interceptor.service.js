@@ -2,7 +2,13 @@ import Credentials from '@/services/Credentials.service.js'
 
 export default function (request, next) {
   const credentials = new Credentials()
-  if (request.url.includes(process.env.address.api)) request.headers.set('Authorization', 'Bearer ' + credentials.getToken())
+  // console.log(credentials.getCurrentUser())
+  if (request.url.includes(process.env.address.api)) {
+    if (!(request.url === process.env.address.api + 'auth_login')) {
+      let token = credentials.getCurrentUser().token
+      request.headers.set('Authorization', `Bearer ${token}`)
+    }
+  }
   request.headers.set('Accept', 'application/json')
   next(response => {
     if (response.status === 401) {
