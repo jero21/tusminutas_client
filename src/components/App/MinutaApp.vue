@@ -12,7 +12,7 @@
       <v-toolbar
         color="secondary"
         dark>
-        <v-toolbar-title>Tu Minuta</v-toolbar-title>
+        <v-toolbar-title>TusMinutas</v-toolbar-title>
       </v-toolbar>
       <v-layout style="padding-top:6px;" row wrap>
         <v-flex xs3>
@@ -43,6 +43,8 @@
           </v-list-tile-content>
         </v-list-tile>
 
+        <!--
+
         <v-divider></v-divider>
         <v-subheader>Soporte</v-subheader>
 
@@ -63,6 +65,7 @@
             <v-list-tile-title>Notificar Error</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        -->
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
@@ -95,7 +98,7 @@ export default {
         {nombre: 'Mis Minutas', route: 'minutas', icon: 'assignment'},
         {nombre: 'Crear Minuta', route: 'crear-minuta', icon: 'add'},
         {nombre: 'Tabla de Composición', route: 'tabla-composicion', icon: 'list'},
-        {nombre: 'Mis Alimentos', route: 'mis-alimentos', icon: 'local_pizza'}
+        {nombre: 'Mis Alimentos', route: 'mis-alimentos', icon: 'fa-apple-alt'}
       ]
     }
   },
