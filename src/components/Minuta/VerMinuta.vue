@@ -39,7 +39,7 @@
             <v-flex xs12 :key="index">
               <h3 class="title">{{ comida.nombre }}</h3>
               <br>
-              <tabla-alimentos-comida :totales="comida.totales" :comida="comida" :indexComida="index"></tabla-alimentos-comida>
+              <tabla-alimentos-comida :propiedades="propiedades" :totales="comida.totales" :comida="comida" :indexComida="index"></tabla-alimentos-comida>
             </v-flex>
             <v-flex :key="index + 'total'" xs12>
               <v-expansion-panel>
@@ -74,7 +74,13 @@ export default {
         energia: 0,
         proteinas: 0,
         carbohidratos: 0
-      }
+      },
+      propiedades: [
+        {text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: false},
+        {text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: false},
+        {text: 'Proteínas (gr)', value: 'proteinas', align: 'left', sortable: false},
+        {text: 'Carbohidratos (gr)', value: 'fibra', align: 'left', sortable: false}
+      ]
     }
   },
   components: {TablaAlimentosComida, Totales},
