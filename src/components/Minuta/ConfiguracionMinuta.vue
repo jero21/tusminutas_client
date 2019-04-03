@@ -54,6 +54,11 @@
                         </v-text-field>
                       </td>
                       </template>
+                      <td>
+                        <v-btn @click="eliminarAlimento(props.index)" fab dark small color="red">
+                          <v-icon dark>delete</v-icon>
+                        </v-btn>
+                      </td>
                     </tr>
                   </template>
                 </v-data-table>
@@ -90,9 +95,10 @@ export default {
         {text: 'Almuerzo', align: 'left', sortable: false},
         {text: 'Once', align: 'left', sortable: false},
         {text: 'Cena', align: 'left', sortable: false},
-        {text: 'Comida 1', align: 'left', sortable: false},
-        {text: 'Comida 2', align: 'left', sortable: false},
-        {text: 'Comida 3', align: 'left', sortable: false}
+        {text: 'Colación 1', align: 'left', sortable: false},
+        {text: 'Colación 2', align: 'left', sortable: false},
+        {text: 'Colación 3', align: 'left', sortable: false},
+        {text: '', align: 'left', sortable: false}
       ],
       propiedades: [],
       search: '',
@@ -112,6 +118,7 @@ export default {
       let vm = this
       let configuracionPorPlato = JSON.parse(JSON.stringify(configuracionPlato))
       vm.configuracion_minuta.forEach((propiedad) => {
+        let cantMaxima = 0
         propiedad.configuracion_platos.forEach((configuracion, indexComida) => {
           if (configuracion.cant_maxima) {
             let configuracionPlato = {
@@ -119,9 +126,11 @@ export default {
               nombre: propiedad.nombre,
               cant_maxima: configuracion.cant_maxima
             }
+            cantMaxima += configuracion.cant_maxima
             configuracionPorPlato[indexComida].configuracion.push(configuracionPlato)
           }
         })
+        propiedad.cant_maxima = cantMaxima
       })
       vm.$store.commit('minuta/actualizarConfiguracion', vm.configuracion_minuta)
       vm.$store.dispatch('minuta/agregarConfiguracionComida', configuracionPorPlato)
@@ -130,6 +139,9 @@ export default {
     closeDialog () {
       // this.dialog = false
       this.$emit('closeDialog')
+    },
+    eliminarAlimento (index) {
+      this.configuracion_minuta.splice(index, 1)
     }
   },
   watch: {
