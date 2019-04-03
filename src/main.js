@@ -14,6 +14,7 @@ import GSignInButton from 'vue-google-signin-button'
 import moment from 'moment'
 
 Vue.prototype.moment = moment
+Vue.prototype.$eventHub = new Vue()
 Vue.use(GSignInButton)
 
 Vue.use(Vuetify, { theme: {
