@@ -1,5 +1,16 @@
 <template>
     <v-layout row wrap>
+      <v-flex class="text-20" v-if="minutas.length === 0" xs12>
+        <blockquote class="blockquote">
+        <v-icon color="info">info</v-icon>
+        No tienes minutas creadas.
+        <a @click="goTo('crear-minuta')">
+          <v-subheader>
+          ¿Por qué no creas una?
+        </v-subheader>
+        </a> 
+      </blockquote>
+      </v-flex>
       <v-flex v-for="minuta in minutas" :key="minuta.id" xs12 md4>
         <v-card>
           <v-toolbar color="orange" dark>
@@ -70,7 +81,8 @@ export default {
   },
   methods: {
     goTo (ruta, params) {
-      this.$router.push({path: `/${ruta}/${params.id}`})
+      if (params) this.$router.push({path: `/${ruta}/${params.id}`})
+      else this.$router.push({path: `/${ruta}`})
     },
     borrarMinuta (id) {
       let vm = this
