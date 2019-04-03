@@ -79,6 +79,18 @@
     <v-content>
       <v-container grid-list-xl>
         <router-view/>
+         <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      right
+      :timeout="4000"
+      top
+    >
+      {{ snackbar.message }}
+     <v-btn flat icon color="white" @click="snackbar.show = false">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
       </v-container>
     </v-content>
   </v-app>
@@ -99,7 +111,12 @@ export default {
         {nombre: 'Crear Minuta', route: 'crear-minuta', icon: 'add'},
         {nombre: 'Tabla de Composición', route: 'tabla-composicion', icon: 'list'},
         {nombre: 'Mis Alimentos', route: 'mis-alimentos', icon: 'fa-apple-alt'}
-      ]
+      ],
+      snackbar: {
+        show: false,
+        color: '',
+        message: ''
+      }
     }
   },
   created () {
@@ -108,6 +125,7 @@ export default {
     }, () => {
       vm.$root.$emit('error-carga-alimentos')
     })
+    vm.$eventHub.$on('showSnackBar', vm.showSnackBar)
   },
   methods: {
     goTo (route) {
@@ -120,6 +138,12 @@ export default {
       let vm = this
       vm.credentialService.clearCredentials()
       vm.$router.push('/login')
+    },
+    showSnackBar (data) {
+      let vm = this
+      vm.snackbar.message = data.message
+      vm.snackbar.color = data.color
+      vm.snackbar.show = true
     }
   }
 }
