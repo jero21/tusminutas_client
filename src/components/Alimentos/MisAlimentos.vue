@@ -1,13 +1,19 @@
 <template>
   <v-layout row wrap>
     <v-layout row wrap>
+      <blockquote class="blockquote">
+        <v-icon color="info">info</v-icon>
+        Tus alimentos y/o comidas creadas las prodras buscar y usar al momento
+        de crear una minuta.
+      </blockquote>
       <v-flex xs12 md10>
       <v-data-table
       :headers="headers"
       :items="misAlimentos"
       :loading="loadingTabla"
-      no-data-text="Cargando alimentos ..."
-      rows-per-page-text="Datos por pagina"
+      no-data-text="No hay alimentos creados"
+      :rows-per-page-items="[-1]"
+      hide-actions
       class="elevation-5"
       style="max-height: 500px !important; overflow-y: auto;">
       <template slot="items" slot-scope="props">
@@ -32,9 +38,14 @@
 
     <alimento-form :dialog="dialog" :alimento="alimento" :type="formType" @closeDialog="dialog = false" @newAlimento="pushAlimento"></alimento-form>
 
-    <v-btn @click="crearAlimento()" bottom fixed right fab dark color="primary">
+    <v-tooltip v-model="tooltip" top>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" @click="crearAlimento()" bottom fixed right fab dark color="primary">
       <v-icon dark>add</v-icon>
     </v-btn>
+      </template>
+      <span>Crear aqui tu alimento</span>
+    </v-tooltip>
 
     <v-dialog v-model="dialogEliminar" persistent max-width="300px">
       <v-card>
@@ -70,7 +81,8 @@ export default {
       dialog: false,
       dialogEliminar: false,
       formType: '',
-      alimento: AlimentoModel
+      alimento: AlimentoModel,
+      tooltip: false
     }
   },
   components: {AlimentoForm},
@@ -81,6 +93,9 @@ export default {
     }, () => {
       vm.loadingTabla = false
     })
+    setTimeout(() => {
+      this.tooltip = true
+    }, 1500)
   },
   methods: {
     pushAlimento (alimento) {
