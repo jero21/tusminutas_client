@@ -10,10 +10,10 @@
       <v-toolbar color="primary" dark>
         <v-toolbar-title> {{ title}} </v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn v-if="type === 'crear'" :disabled="formValidado" @click="saveAlimento(alimento)" outline color="white">Guardar
+        <v-btn :loading="loading" v-if="type === 'crear'" :disabled="!valid" @click="saveAlimento(alimento)" outline color="white">Guardar
           <v-icon right>save</v-icon>
         </v-btn>
-        <v-btn v-if="type === 'editar'" :disabled="formValidado" @click="actualizarAlimento(alimento)" outline color="white">Actualizar
+        <v-btn :loading="loading" v-if="type === 'editar'" :disabled="!valid" @click="actualizarAlimento(alimento)" outline color="white">Actualizar
           <v-icon right>save</v-icon>
         </v-btn>
         <v-btn icon @click="closeDialog()">
@@ -25,7 +25,7 @@
           <v-form v-model="valid" ref="form" lazy-validation>
             <v-layout row wrap>
               <v-flex xs12>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un nombre')" v-model="alimento.nombre" label="Nombre" color="secondary" required></v-text-field>
+              <v-text-field :disabled="type === 'ver'" :rules="campoRule('nombre')" v-model="alimento.nombre" label="Nombre" color="secondary" required></v-text-field>
             </v-flex>
             <v-flex xs12>
               <v-text-field :disabled="type === 'ver'" v-model="alimento.origen" label="Origen" color="secondary"></v-text-field>
@@ -33,7 +33,7 @@
             <v-flex xs12 md6>
               <v-select
                 :disabled="type === 'ver'"
-                :rules="getRules('un grupo')"
+                :rules="campoRule('grupo')"
                 v-model="alimento.grupo"
                 label="Grupo"
                 color="secondary"
@@ -46,7 +46,7 @@
             <v-flex xs12 md6>
               <v-select
                 :disabled="type === 'ver'"
-                :rules="getRules('un sub grupo')"
+                :rules="campoRule('sub grupo')"
                 v-model="alimento.subgrupo"
                 label="Sub Grupo"
                 color="secondary"
@@ -56,177 +56,111 @@
                 required>
                 </v-select>
             </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.a_g_omega3" label="A.G. Omega 3" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.a_g_omega6" label="A.G. Omega 6" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.a_g_trans" label="A.G. Trans" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.a_grasos_monosat" label="A.G. Monosat" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.a_grasos_polisat" label="A.G. Polisat" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.a_grasos_sat" label="A.G. Sat" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.acido_folico" label="Ácido Fólico" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.acido_pantotenico" label="Ácido Pantoténico" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.biotina" label="Biotina" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.calcio" label="Calcio" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.carbohidratos" label="Carbohidratos" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.cobre" label="Cobre" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.colesterol" label="Colesterol" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.energia" label="Calorías" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.fibra" label="Fibra" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.fosforo" label="Fósforo" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.grasas_totales" label="Grasas Totales" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.hierro" label="Hierro" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.humedad" label="Humedad" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.magnesio" label="Magnesio" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.manganeso" label="Manganeso" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.potasio" label="Potasio" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.proteinas" label="Proteínas" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.riboflavina" label="Riboflavina" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.selenio" label="Selenio" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.sodio" label="Sodio" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.tiamina" label="Tiamina" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.yodo" label="Yodo" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.zinc" label="Zinc" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.vit_a" label="Vitamina A" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.vit_b6" label="Vitamina B6" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.vit_b12" label="Vitamina B12" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.vit_c" label="Vitamina C" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.vit_d" label="Vitamina D" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.vit_e" label="Vitamina E" color="secondary" required></v-text-field>
-            </v-flex>
-            <v-flex xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="getRules('un valor')" type="number" v-model="alimento.vit_k" label="Vitamina K" color="secondary" required></v-text-field>
+            <v-flex :key="propiedad.id" v-for="propiedad in propiedades" xs12 md6>
+              <v-text-field :disabled="type === 'ver'" :rules="propiedadRule()" type="Number" v-model.Number="alimento[propiedad.nombre]" :label="propiedad.nombre_real" color="secondary" required></v-text-field>
             </v-flex>
             </v-layout>
           </v-form>
         </v-container>
       </v-card-text>
     </v-card>
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      right
+      :timeout="4000"
+      top>
+    {{ snackbar.message }}
+     <v-btn flat icon color="white" @click="snackbar.show = false">
+        <v-icon>close</v-icon>
+      </v-btn>
+    </v-snackbar>
   </v-dialog>
 </template>
 
 <script>
 import {grupoService} from '@/services/Grupo.service'
 import {alimentoNutricionistaService} from '@/services/AlimentoNutricionista.service'
+import {propiedadService} from '@/services/Propiedad.service'
 export default {
   data () {
     return {
       title: '',
       valid: true,
       grupos: [],
-      subgrupos: []
+      subgrupos: [],
+      propiedades: [],
+      loading: false,
+      snackbar: {
+        show: false,
+        color: '',
+        message: ''
+      }
     }
   },
   props: ['dialog', 'type', 'alimento'],
   mounted () {
     let vm = this
+    vm.cargarPropiedades()
     vm.grupos = grupoService.getGrupos()
     vm.subgrupos = grupoService.getSubgrupos()
   },
   methods: {
     saveAlimento (alimento) {
       let vm = this
-      alimentoNutricionistaService.save(alimento).then(data => {
-        vm.$store.dispatch('loadMyAlimentos')
-        vm.closeDialog()
-      })
+      if (vm.$refs.form.validate()) {
+        vm.loading = true
+        alimentoNutricionistaService.save(alimento).then(data => {
+          vm.$store.dispatch('loadMyAlimentos')
+          vm.$eventHub.$emit('showSnackBar', {message: 'Alimento creado correctamente', color: 'green'})
+          vm.closeDialog()
+        })
+      }
     },
     actualizarAlimento (alimento) {
       let vm = this
-      alimentoNutricionistaService.update(alimento.id, alimento).then(data => {
-        console.log(data)
-        vm.$store.dispatch('loadMyAlimentos')
-        vm.closeDialog()
+      if (vm.$refs.form.validate()) {
+        vm.loading = true
+        alimentoNutricionistaService.update(alimento.id, alimento).then(data => {
+          vm.$store.dispatch('loadMyAlimentos')
+          vm.$eventHub.$emit('showSnackBar', {message: 'Alimento editado correctamente', color: 'green'})
+          vm.closeDialog()
+        })
+      }
+    },
+    propiedadRule () {
+      return [v => (!!v || Number.isInteger(v)) || 'Debe ingresar un valor']
+    },
+    campoRule (campo) {
+      return [v => !!v || `Debe ingresar un ${campo}`]
+    },
+    cargarPropiedades () {
+      let vm = this
+      propiedadService.query().then(data => {
+        vm.propiedades = data.body
       })
     },
-    getRules (campo) {
-      return [v => !!v || `Debe ingresar ${campo}`]
+    showSnackbar (message, color) {
+      let vm = this
+      vm.snackbar.message = message
+      vm.snackbar.color = color
+      vm.snackbar.show = true
     },
     closeDialog () {
       let vm = this
+      vm.loading = false
       vm.$emit('closeDialog')
-    }
-  },
-  computed: {
-    formValidado () {
-      let vm = this
-      return !vm.valid
     }
   },
   watch: {
     type (value) {
       let vm = this
-      vm.$refs.form.resetValidation()
       if (value === 'crear') vm.title = 'Crear Alimento'
       if (value === 'ver') vm.title = 'Ver Alimento'
       if (value === 'editar') vm.title = 'Editar Alimento'
+    },
+    dialog (value) {
+      if (value) this.$refs.form.resetValidation()
     }
   }
 }
