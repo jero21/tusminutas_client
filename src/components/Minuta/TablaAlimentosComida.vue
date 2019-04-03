@@ -23,10 +23,11 @@
               </v-text-field>
             </td>
             <td v-else class="text-xs-left">{{ props.item.cantidad }}</td>
-            <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.humedad).toFixed(1) }}</td>
-            <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.energia).toFixed(1) }}</td>
-            <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.proteinas).toFixed(1) }}</td>
-            <td class="text-xs-left">{{ getValor(props.item.cantidad, props.item.carbohidratos).toFixed(1) }}</td>
+            <template>
+              <td :key="propiedad.text" v-for="propiedad in propiedades" class="text-xs-left">
+                {{ getValor(props.item.cantidad, props.item[propiedad.value]).toFixed(1) }}
+              </td>
+            </template>
             <td colspan="100%" class="text-xs-left">
               <v-layout row wrap>
                 <v-flex xs12 md6 v-if="edit">
@@ -51,10 +52,10 @@
           <tr class="primary white--text">
             <td><strong>Totales</strong></td>
             <td><strong>{{ totales.cantidad}}</strong></td>
-            <td><strong :class="{'red--text':propiedadSuperaConfiguracion('humedad') }">{{ totales.humedad.toFixed(1)}}</strong></td>
-            <td><strong :class="{'red--text':propiedadSuperaConfiguracion('energia') }">{{ totales.energia.toFixed(1)}}</strong></td>
-            <td><strong :class="{'red--text':propiedadSuperaConfiguracion('proteinas') }">{{ totales.proteinas.toFixed(1)}}</strong></td>
-            <td colspan="100%"><strong :class="{'red--text':propiedadSuperaConfiguracion('carbohidratos') }">{{ totales.carbohidratos.toFixed(1) }}</strong></td>
+            <template v-for="(propiedad, index) in propiedades">
+              <td v-if="index !== propiedades.length - 1" :key="propiedad.text" ><strong :class="{'red--text':propiedadSuperaConfiguracion(propiedad.value) }">{{ totales[propiedad.value].toFixed(1)}}</strong></td>
+              <td colspan="100%" v-else :key="propiedad.text" ><strong :class="{'red--text':propiedadSuperaConfiguracion(propiedad.value) }">{{ totales[propiedad.value].toFixed(1)}}</strong></td>
+            </template>
           </tr>
         </template>
   </v-data-table>
@@ -66,24 +67,42 @@ import DetallePropiedadAlimento from '@/components/Minuta/DetallePropiedadesAlim
 export default {
   data () {
     return {
-      headers: [
-        {text: 'Alimento', value: 'nombre', align: 'left', sortable: false},
-        {text: 'Cantidad (gr o ml)', value: 'cantidad', align: 'left', sortable: false},
-        {text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: false},
-        {text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: false},
-        {text: 'Proteínas (gr)', value: 'proteinas', align: 'left', sortable: false},
-        {text: 'Carbohidratos (gr)', value: 'fibra', align: 'left', sortable: false},
-        {text: 'Acciones', align: 'left', sortable: false}
-      ],
+      headers: [],
+      headerAlimento: {text: 'Alimento', value: 'nombre', align: 'left', sortable: false},
+      headerCantidad: {text: 'Cantidad', value: 'cantidad', align: 'left', sortable: false},
+      headerAcciones: {text: 'Acciones', align: 'left', sortable: false},
       rows_per_page_items: [{'text': 'Todos', 'value': -1}, 5, 10, 25],
       totalesC: {cantidad: 0, humedad: 0, energia: 0, proteinas: 0, carbohidratos: 0}
     }
   },
   components: {DetallePropiedadAlimento},
-  props: ['comida', 'edit', 'indexComida'],
+  props: ['comida', 'edit', 'indexComida', 'propiedades'],
+  mounted () {
+    let vm = this
+    vm.headers.push(vm.headerAlimento)
+    vm.headers.push(vm.headerCantidad)
+    vm.propiedades.forEach(propiedad => {
+      vm.headers.push(propiedad)
+    })
+    vm.headers.push(vm.headerAcciones)
+  },
   computed: {
     totales () {
       return this.$store.getters['minuta/totalComida'](this.indexComida)
+    }
+  },
+  watch: {
+    propiedades (propiedades) {
+      let vm = this
+      let headers = []
+      headers.push(vm.headerAlimento)
+      headers.push(vm.headerCantidad)
+      propiedades.forEach(propiedad => {
+        headers.push(propiedad)
+      })
+      console.log(headers)
+      headers.push(vm.headerAcciones)
+      vm.headers = headers
     }
   },
   methods: {
