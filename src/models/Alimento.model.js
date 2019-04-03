@@ -20,6 +20,7 @@ let alimento = {
   humedad: 0,
   magnesio: 0,
   manganeso: 0,
+  niacina: 0,
   potasio: 0,
   proteinas: 0,
   riboflavina: 0,
