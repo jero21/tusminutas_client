@@ -27,7 +27,18 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-flex>
-    <tabla-alimentos-comida ref="tablaAlimentos" :edit="true" :indexComida="indexComida" :comida="comida"></tabla-alimentos-comida>
+    <v-flex xs12>
+      <v-combobox
+        v-model="datosTabla"
+        :items="propiedades"
+        item-text="nombre_real"
+        item-value="nombre_real"
+        label="Elije las propiedades a ver"
+        chips
+        multiple>
+      </v-combobox>
+    </v-flex>
+    <tabla-alimentos-comida :propiedades="datosTabla" ref="tablaAlimentos" :edit="true" :indexComida="indexComida" :comida="comida"></tabla-alimentos-comida>
     <v-flex xs12>
       <v-expansion-panel>
         <v-expansion-panel-content>
@@ -42,16 +53,40 @@
 <script>
 import TablaAlimentosComida from '@/components/Minuta/TablaAlimentosComida'
 import Totales from '@/components/Minuta/Totales'
+import {propiedadService} from '@/services/Propiedad.service'
 export default {
   data () {
     return {
       select: {},
       search: '',
-      menu: false
+      menu: false,
+      propiedades: [],
+      datosTabla: [
+        {nombre_real: 'Humedad', text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: false},
+        {nombre_real: 'Energía', text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: false}
+      ]
     }
   },
   props: ['indexComida', 'comida'],
   components: {TablaAlimentosComida, Totales},
+  mounted () {
+    let vm = this
+    propiedadService.query().then(data => {
+      vm.propiedades = data.body
+      vm.propiedades.forEach(propiedad => {
+        propiedad.text = propiedad.nombre_real
+        propiedad.value = propiedad.nombre
+        propiedad.align = 'left'
+        propiedad.sortable = false
+      })
+    })
+  },
+  methods: {
+    remove (item) {
+      this.datosTabla.splice(this.datosTabla.indexOf(item), 1)
+      this.datosTabla = [...this.datosTabla]
+    }
+  },
   computed: {
     allAlimentos () {
       return this.$store.getters.allAlimentos
