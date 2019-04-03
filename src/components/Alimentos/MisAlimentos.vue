@@ -3,7 +3,7 @@
     <v-layout row wrap>
       <blockquote class="blockquote">
         <v-icon color="info">info</v-icon>
-        Tus alimentos y/o comidas creadas las prodras buscar y usar al momento
+        Tus alimentos y/o comidas creadas las prodrás buscar y usar al momento
         de crear una minuta.
       </blockquote>
       <v-flex xs12 md10>
@@ -44,7 +44,7 @@
       <v-icon dark>add</v-icon>
     </v-btn>
       </template>
-      <span>Crear aqui tu alimento</span>
+      <span>Crear aquí tu alimento</span>
     </v-tooltip>
 
     <v-dialog v-model="dialogEliminar" persistent max-width="300px">
@@ -103,7 +103,7 @@ export default {
     },
     crearAlimento () {
       let vm = this
-      vm.alimento = AlimentoModel
+      vm.alimento = JSON.parse(JSON.stringify(AlimentoModel))
       vm.formType = 'crear'
       vm.dialog = true
     },
@@ -122,9 +122,9 @@ export default {
     borrarAlimento (id) {
       let vm = this
       alimentoNutricionistaService.destroy(id).then(data => {
-        console.log(data)
         vm.$store.dispatch('loadMyAlimentos')
         vm.dialogEliminar = false
+        vm.$eventHub.$emit('showSnackBar', {message: 'Alimento eliminado correctamente', color: 'green'})
       })
     }
   },
