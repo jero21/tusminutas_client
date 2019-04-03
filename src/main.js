@@ -7,6 +7,7 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons/iconfont/material-icons.css'
 import 'typeface-roboto/index.css'
+import '@fortawesome/fontawesome-free/css/all.css'
 import InterceptorApi from '@/services/Interceptor.service'
 import store from '@/store/index'
 import GSignInButton from 'vue-google-signin-button'
@@ -24,6 +25,10 @@ Vue.use(Vuetify, { theme: {
   success: '#4CAF50',
   warning: '#FFC107'
 }})
+
+Vue.use(Vuetify, {
+  iconfont: 'fa'
+})
 
 Vue.http.interceptors.push(InterceptorApi)
 
