@@ -18,15 +18,15 @@
             <v-flex xs12>
               <h3 class="title">Configuración Minuta</h3>
             </v-flex>
-            <v-flex xs12 v-for="configuracion in minuta.configuracion_minutas" :key="'conf'+configuracion.id">
+            <v-flex xs6 md2 lg2 v-for="configuracion in minuta.configuracion_minutas" :key="'conf'+configuracion.id">
               <v-layout row wrap>
                 <v-flex xs12>
                   <h4>{{ configuracion.propiedad.nombre_real }}</h4>
                 </v-flex>
-                <v-flex xs6 md2 lg2>
+                <v-flex xs12>
                   <v-text-field readonly :value="configuracion.cant_maxima" label="Cantidad Maxima" color="orange"></v-text-field>
                 </v-flex>
-                <v-flex xs6 md2 lg2 v-for="comida in configuracion.configuracion_tipo_comida" :key="comida.id">
+                <v-flex xs12  v-for="comida in configuracion.configuracion_tipo_comida" :key="comida.id">
                   <v-text-field readonly :value="comida.cant_maxima" :label="comida.tipo_comida.nombre" color="orange"></v-text-field>
                 </v-flex>
               </v-layout>
