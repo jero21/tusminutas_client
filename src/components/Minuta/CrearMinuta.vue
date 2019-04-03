@@ -38,7 +38,6 @@
 import CrearComidaMinuta from '@/components/Minuta/CrearComidaMinuta'
 import DialogGuardarMinta from '@/components/Minuta/DialogGuardarMinuta'
 import ConfiguracionMinuta from '@/components/Minuta/ConfiguracionMinuta'
-import InformacionConfiguracionMinuta from '@/components/Minuta/InformacionConfiguracionMinuta'
 import { createHelpers } from 'vuex-map-fields'
 const { mapMultiRowFields } = createHelpers({
   getterType: 'minuta/getField',
@@ -56,8 +55,7 @@ export default {
   components: {
     CrearComidaMinuta,
     DialogGuardarMinta,
-    ConfiguracionMinuta,
-    InformacionConfiguracionMinuta
+    ConfiguracionMinuta
   },
   methods: {
     nuevaConfiguracion (configuracion, configuracionPorPlato) {
