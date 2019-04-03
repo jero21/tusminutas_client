@@ -11,12 +11,9 @@
         <v-icon>close</v-icon>
       </v-btn>
     </v-snackbar>
-    <v-flex xs12>
-      <h3 class="title">Tabla de composición química de los alimentos</h3>
-    </v-flex>
-    <v-flex xs6>
-      <v-divider></v-divider>
-    </v-flex>
+    <blockquote class="blockquote">
+        Tabla de composición química de los alimentos Chilenos.
+      </blockquote>
     <v-flex xs12>
       <v-toolbar
       color="primary"
@@ -47,9 +44,9 @@
     <v-data-table
       :headers="headers"
       :items="alimentosItems"
-      :loading="loadingTabla"
       no-data-text="Cargando alimentos ..."
-      rows-per-page-text="Datos por pagina"
+      :rows-per-page-items="rows_per_page_items"
+      hide-actions
       class="elevation-5"
       style="max-height: 500px !important; overflow-y: auto;">
       <template slot="items" slot-scope="props">
@@ -101,7 +98,7 @@ export default {
         color: 'success',
         message: 'ee'
       },
-      loadingTabla: true
+      rows_per_page_items: [{'text': 'Todos', 'value': -1}]
     }
   },
   mounted () {
@@ -134,7 +131,6 @@ export default {
         })
       }, () => {
         vm.showSnackbar('error', 'Error al cargar los alimentos')
-        vm.loadingTabla = false
       })
     },
     showSnackbar (color, message) {
