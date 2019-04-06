@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import {propiedadService} from '@/services/Propiedad.service'
 
 let configuracionPlato = [
   {id_tipo_comida: 1, cant_maxima: 0, configuracion: []},
@@ -100,19 +99,12 @@ export default {
         {text: 'Colación 3', align: 'left', sortable: false},
         {text: '', align: 'left', sortable: false}
       ],
-      propiedades: [],
       search: '',
       select: {},
       configuracion_minuta: []
     }
   },
   props: ['dialog'],
-  created () {
-    let vm = this
-    propiedadService.query().then(data => {
-      vm.propiedades = data.body
-    })
-  },
   methods: {
     guardarConfiguracion () {
       let vm = this
@@ -142,6 +134,11 @@ export default {
     },
     eliminarAlimento (index) {
       this.configuracion_minuta.splice(index, 1)
+    }
+  },
+  computed: {
+    propiedades () {
+      return this.$store.getters.propiedades
     }
   },
   watch: {

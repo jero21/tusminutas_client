@@ -100,7 +100,6 @@ export default {
       propiedades.forEach(propiedad => {
         headers.push(propiedad)
       })
-      console.log(headers)
       headers.push(vm.headerAcciones)
       vm.headers = headers
     }

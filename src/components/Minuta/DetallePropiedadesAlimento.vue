@@ -11,24 +11,17 @@
 </template>
 
 <script>
-import {propiedadService} from '@/services/Propiedad.service'
 export default {
-  data () {
-    return {
-      propiedades: []
-    }
-  },
   props: ['item'],
-  mounted () {
-    let vm = this
-    propiedadService.query().then(data => {
-      vm.propiedades = data.body
-    })
-  },
   methods: {
     getValor (propiedad) {
       let valor = (this.item.cantidad * propiedad) / 100
       return valor
+    }
+  },
+  computed: {
+    propiedades () {
+      return this.$store.getters.propiedades
     }
   }
 }

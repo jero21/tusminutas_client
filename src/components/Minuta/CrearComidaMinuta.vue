@@ -53,14 +53,12 @@
 <script>
 import TablaAlimentosComida from '@/components/Minuta/TablaAlimentosComida'
 import Totales from '@/components/Minuta/Totales'
-import {propiedadService} from '@/services/Propiedad.service'
 export default {
   data () {
     return {
       select: {},
       search: '',
       menu: false,
-      propiedades: [],
       datosTabla: [
         {nombre_real: 'Humedad', text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: false},
         {nombre_real: 'Energía', text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: false}
@@ -69,18 +67,6 @@ export default {
   },
   props: ['indexComida', 'comida'],
   components: {TablaAlimentosComida, Totales},
-  mounted () {
-    let vm = this
-    propiedadService.query().then(data => {
-      vm.propiedades = data.body
-      vm.propiedades.forEach(propiedad => {
-        propiedad.text = propiedad.nombre_real
-        propiedad.value = propiedad.nombre
-        propiedad.align = 'left'
-        propiedad.sortable = false
-      })
-    })
-  },
   methods: {
     remove (item) {
       this.datosTabla.splice(this.datosTabla.indexOf(item), 1)
@@ -93,6 +79,16 @@ export default {
     },
     totales () {
       return this.$store.getters['minuta/totalComida'](this.indexComida)
+    },
+    propiedades () {
+      let propiedades = JSON.parse(JSON.stringify(this.$store.getters.propiedades))
+      propiedades.forEach(propiedad => {
+        propiedad.text = propiedad.nombre_real
+        propiedad.value = propiedad.nombre
+        propiedad.align = 'left'
+        propiedad.sortable = false
+      })
+      return propiedades
     }
   },
   watch: {

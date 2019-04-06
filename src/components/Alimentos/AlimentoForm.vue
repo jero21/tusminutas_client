@@ -81,7 +81,6 @@
 <script>
 import {grupoService} from '@/services/Grupo.service'
 import {alimentoNutricionistaService} from '@/services/AlimentoNutricionista.service'
-import {propiedadService} from '@/services/Propiedad.service'
 export default {
   data () {
     return {
@@ -89,7 +88,6 @@ export default {
       valid: true,
       grupos: [],
       subgrupos: [],
-      propiedades: [],
       loading: false,
       snackbar: {
         show: false,
@@ -136,8 +134,9 @@ export default {
     },
     cargarPropiedades () {
       let vm = this
-      propiedadService.query().then(data => {
-        vm.propiedades = data.body
+      vm.$store.dispatch('loadPropiedades').then(() => {
+      }, () => {
+        vm.$eventHub.$emit('showSnackBar', {message: 'Error al cargar las propiedades', color: 'red'})
       })
     },
     showSnackbar (message, color) {
@@ -150,6 +149,11 @@ export default {
       let vm = this
       vm.loading = false
       vm.$emit('closeDialog')
+    }
+  },
+  computed: {
+    propiedades () {
+      return this.$store.getters.propiedades
     }
   },
   watch: {

@@ -1,9 +1,11 @@
 import {alimentoService} from '@/services/Alimento.service'
 import {alimentoNutricionistaService} from '@/services/AlimentoNutricionista.service'
+import {propiedadService} from '@/services/Propiedad.service'
 
 const defaultState = {
   alimentos: [],
-  misAlimentos: []
+  misAlimentos: [],
+  propiedades: []
 }
 
 const actions = {
@@ -26,6 +28,14 @@ const actions = {
         reject(err)
       })
     })
+  },
+  loadPropiedades (context) {
+    return new Promise((resolve, reject) => {
+      propiedadService.query().then(data => {
+        context.commit('setPropiedades', data.body)
+        resolve()
+      }, err => reject(err))
+    })
   }
 }
 
@@ -35,6 +45,9 @@ const mutations = {
   },
   setMisAlimentos (state, misAlimentos) {
     state.misAlimentos = misAlimentos
+  },
+  setPropiedades (state, propiedades) {
+    state.propiedades = propiedades
   }
 }
 
@@ -47,6 +60,9 @@ const getters = {
   },
   allAlimentos (state) {
     return state.alimentos.concat(state.misAlimentos)
+  },
+  propiedades (state) {
+    return state.propiedades
   }
 }
 

@@ -38,6 +38,7 @@ export default {
       potasio: 0,
       proteinas: 0,
       riboflavina: 0,
+      niacina: 0,
       selenio: 0,
       sodio: 0,
       tiamina: 0,

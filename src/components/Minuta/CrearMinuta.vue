@@ -57,10 +57,20 @@ export default {
     DialogGuardarMinta,
     ConfiguracionMinuta
   },
+  mounted () {
+    this.cargarPropiedades()
+  },
   methods: {
     nuevaConfiguracion (configuracion, configuracionPorPlato) {
       this.minuta.configuracion = configuracion
       this.minuta.configuracion_platos = configuracionPorPlato
+    },
+    cargarPropiedades () {
+      let vm = this
+      vm.$store.dispatch('loadPropiedades').then(() => {
+      }, () => {
+        vm.$eventHub.$emit('showSnackBar', {message: 'Error al cargar las propiedades', color: 'red'})
+      })
     }
   },
   computed: {

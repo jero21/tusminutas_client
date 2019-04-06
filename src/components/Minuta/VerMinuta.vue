@@ -87,6 +87,7 @@ export default {
   created () {
     let vm = this
     let id = vm.$route.params.id
+    vm.cargarPropiedades()
     minutaService.getById(id).then(response => {
       let minuta = response.body
       minuta.comidas = JSON.parse(minuta.comidas)
@@ -94,6 +95,13 @@ export default {
     })
   },
   methods: {
+    cargarPropiedades () {
+      let vm = this
+      vm.$store.dispatch('loadPropiedades').then(() => {
+      }, () => {
+        vm.$eventHub.$emit('showSnackBar', {message: 'Error al cargar las propiedades', color: 'red'})
+      })
+    },
     totalComida (indexComida) {
       let totales = {
         cantidad: 0,
@@ -121,6 +129,7 @@ export default {
         potasio: 0,
         proteinas: 0,
         riboflavina: 0,
+        niacina: 0,
         selenio: 0,
         sodio: 0,
         tiamina: 0,
