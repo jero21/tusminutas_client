@@ -12,7 +12,7 @@
         <v-text-field v-model="infoMinuta.nombre" placeholder=" " label="Nombre Minuta" color="secondary" required></v-text-field>
       </v-flex>
       <v-flex xs12>
-        <v-text-field multi-line rows="2" v-model="infoMinuta.descripcion" placeholder=" " label="Descripción Minuta" color="secondary"></v-text-field>
+        <v-textarea placeholder=" " rows="2" v-model="infoMinuta.descripcion" label="Descripción Minuta" color="secondary"></v-textarea>
       </v-flex>
     </v-flex>
     <blockquote style="font-size:15px;" class="blockquote">
@@ -34,7 +34,7 @@
       </v-flex>
         <v-flex xs12>
           <v-data-iterator
-            :items="configuracionPropiedades"
+            :items="configuracion_minuta"
             :rows-per-page-items="[-1]"
             :pagination.sync="pagination"
             content-tag="v-layout"
@@ -114,7 +114,7 @@ export default {
     guardarConfiguracion () {
       let vm = this
       let configuracionPorPlato = JSON.parse(JSON.stringify(configuracionPlato))
-      vm.configuracionPropiedades.forEach((propiedad) => {
+      vm.configuracion_minuta.forEach((propiedad) => {
         let cantMaxima = 0
         propiedad.configuracion_platos.forEach((configuracion, indexComida) => {
           if (configuracion.cant_maxima) {
@@ -129,14 +129,14 @@ export default {
         })
         propiedad.cant_maxima = cantMaxima
       })
-      vm.$store.commit('minuta/actualizarConfiguracion', vm.configuracionPropiedades)
+      vm.$store.commit('minuta/actualizarConfiguracion', vm.configuracion_minuta)
       vm.$store.commit('minuta/agregarInformacionMinuta', vm.infoMinuta)
       vm.$store.dispatch('minuta/agregarConfiguracionComida', configuracionPorPlato)
       vm.saltarConfiguracion()
     },
     limpiarDatos () {
       this.$store.commit('minuta/limpiarMinuta')
-      this.$router.push({path: '/crear-minuta/'})
+      this.configuracion_minuta = JSON.parse(JSON.stringify(this.configuracionPropiedades))
     },
     saltarConfiguracion () {
       let vm = this
@@ -149,7 +149,7 @@ export default {
   mounted () {
     let vm = this
     // vm.minuta = JSON.parse(JSON.stringify(vm.infoMinuta))
-    // vm.configuracion_minuta = JSON.parse(JSON.stringify(vm.configuracion))
+    vm.configuracion_minuta = JSON.parse(JSON.stringify(vm.configuracionPropiedades))
     if (!vm.previa) {
       vm.conf.title = 'Configuración de la minuta.'
       vm.conf.btnText = 'Volver'

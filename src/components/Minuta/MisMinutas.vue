@@ -22,7 +22,7 @@
           </v-toolbar>
           <v-card-text>
             <v-flex xs12>
-              <v-text-field :rows="2" multi-line readonly :value="minuta.descripcion || ''" label="Descripción" color="orange"></v-text-field>
+              <v-textarea readonly  :rows="2" :value="minuta.descripcion" label="Descripción" color="secondary"></v-textarea>
             </v-flex>
             <v-flex xs12>
               <v-text-field readonly :value="moment(minuta.created_at).format('DD-MM-YYYY')" label="Fecha de Creación" color="orange"></v-text-field>

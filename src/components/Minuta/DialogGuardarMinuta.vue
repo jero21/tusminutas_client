@@ -22,7 +22,7 @@
               <v-text-field :rules="[v => !!v || 'Se requiere nombre']" v-model="minuta.nombre" label="Nombre Minuta" color="secondary" required></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-text-field multi-line v-model="minuta.descripcion" label="Descripción Minuta" color="secondary"></v-text-field>
+              <v-textarea :rules="[v => !!v || 'Se requiere una descripción']" v-model="minuta.descripcion" label="Descripción Minuta" color="secondary"></v-textarea>
             </v-flex>
             <v-flex xs12>
               <v-btn @click="guardarMinuta(minuta)" :disabled="!valid" block color="primary">Guardar</v-btn>
