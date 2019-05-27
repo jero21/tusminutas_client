@@ -4,20 +4,28 @@
       :items="allAlimentos"
       :search-input.sync="search"
       v-model="select"
-      label="Busca tus Alimentos"
+      label="Busca alimentos para agregar a la comida"
       item-text="nombre"
       persistent-hint
       autocomplete
       cache-items
       return-object>
     </v-select>
-    <v-flex xs12>
+    <tabla-alimentos-comida :propiedades="datosTabla" ref="tablaAlimentos" :edit="true" :indexComida="indexComida" :comida="comida"></tabla-alimentos-comida>
+    <v-layout row wrap>
+      <v-flex xs12 md6 lg6>
       <v-expansion-panel>
         <v-expansion-panel-content>
-          <div slot="header">Configuración</div>
+          <div slot="header">Maximos Propiedades</div>
           <v-card>
             <v-card-text>
               <v-layout row wrap>
+                <v-flex v-if="comida.configuracion.length === 0" xs12>
+                  <blockquote style="font-size:15px;" class="blockquote">
+                    <v-icon small color="info">info</v-icon>
+                      Aún no configuras las propiedades máximas.
+                  </blockquote>
+                </v-flex>
                 <v-flex xs6 md3 lg3 v-for="(propiedadConfiguracion, index) in comida.configuracion" :key="index">
                   <v-text-field :error="totales[propiedadConfiguracion.nombre] > propiedadConfiguracion.cant_maxima" readonly :value="propiedadConfiguracion.cant_maxima" :label="propiedadConfiguracion.nombre_real" color="red"></v-text-field>
               </v-flex>
@@ -27,7 +35,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-flex>
-    <v-flex xs12>
+      <v-flex xs12 md6 lg6>
       <v-combobox
         v-model="datosTabla"
         :items="propiedades"
@@ -38,15 +46,7 @@
         multiple>
       </v-combobox>
     </v-flex>
-    <tabla-alimentos-comida :propiedades="datosTabla" ref="tablaAlimentos" :edit="true" :indexComida="indexComida" :comida="comida"></tabla-alimentos-comida>
-    <v-flex xs12>
-      <v-expansion-panel>
-        <v-expansion-panel-content>
-          <div slot="header">Totales Comida</div>
-          <totales :totales="totales"></totales>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-flex>
+    </v-layout>
   </section>
 </template>
 

@@ -1,7 +1,11 @@
 import { updateField } from 'vuex-map-fields'
+import Minuta from '../../../models/Minuta'
 
 export default {
   updateField,
+  limpiarMinuta (state) {
+    Object.assign(state, new Minuta())
+  },
   agregarInformacionMinuta (state, {nombre, descripcion}) {
     state.nombre = nombre
     state.descripcion = descripcion

@@ -44,29 +44,44 @@ export default {
       minuta: {
         nombre: '',
         descripcion: ''
-      }
+      },
+      nombreRule: [v => !!v || `Debe ingresar un Nombre`]
     }
   },
   props: ['dialog'],
   methods: {
     guardarMinuta (data) {
       let vm = this
-      vm.$store.dispatch('minuta/agregarInformacionMinuta', data)
-      let minutaState = vm.$store.getters['minuta/minutaActual']
-      let minuta = JSON.parse(JSON.stringify(minutaState))
-      minuta.comidas = JSON.stringify(minuta.comidas)
-      minutaService.save(minuta).then(data => {
-        let minuta = data.body.minuta
-        vm.$router.push({path: `/minutas/${minuta.id}`})
-      }, err => {
-        console.log(`error en la peticion:`)
-        console.log(err)
-      })
+      if (vm.$refs.form.validate()) {
+        vm.$store.dispatch('minuta/agregarInformacionMinuta', data)
+        let minutaState = vm.$store.getters['minuta/minutaActual']
+        let minuta = JSON.parse(JSON.stringify(minutaState))
+        minuta.comidas = JSON.stringify(minuta.comidas)
+        minutaService.save(minuta).then(data => {
+          let minuta = data.body.minuta
+          vm.$store.commit('minuta/limpiarMinuta')
+          vm.$router.push({path: `/minutas/${minuta.id}`})
+        }, err => {
+          console.log(`error en la peticion:`)
+          console.log(err)
+        })
+      }
     },
     closeDialog () {
       this.$emit('closeDialog')
       this.minuta.nombre = ''
       this.minuta.descripcion = ''
+    }
+  },
+  watch: {
+    dialog (val) {
+      if (val) {
+        let vm = this
+        let minutaState = vm.$store.getters['minuta/minutaActual']
+        let minuta = JSON.parse(JSON.stringify(minutaState))
+        vm.minuta.nombre = minuta.nombre
+        vm.minuta.descripcion = minuta.descripcion
+      }
     }
   }
 }

@@ -11,6 +11,18 @@ export default {
   alimentosComida: (state) => (indexComida) => {
     return state.comidas[indexComida].alimentos
   },
+  infoMinuta (state) {
+    return {
+      nombre: state.nombre,
+      descripcion: state.descripcion
+    }
+  },
+  esNueva (state) {
+    return state.esNueva()
+  },
+  configuracion (state) {
+    return state.configuracion
+  },
   totalComida: (state) => (indexComida) => {
     let totales = {
       cantidad: 0,

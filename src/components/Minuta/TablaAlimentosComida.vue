@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-data-table
       id="scroll-target"
       style="max-height: 400px"
@@ -54,15 +55,29 @@
             <td><strong>{{ totales.cantidad}}</strong></td>
             <template v-for="(propiedad, index) in propiedades">
               <td v-if="index !== propiedades.length - 1" :key="propiedad.text" ><strong :class="{'red--text':propiedadSuperaConfiguracion(propiedad.value) }">{{ totales[propiedad.value].toFixed(1)}}</strong></td>
-              <td colspan="100%" v-else :key="propiedad.text" ><strong :class="{'red--text':propiedadSuperaConfiguracion(propiedad.value) }">{{ totales[propiedad.value].toFixed(1)}}</strong></td>
+              <td  v-else :key="propiedad.text" ><strong :class="{'red--text':propiedadSuperaConfiguracion(propiedad.value) }">{{ totales[propiedad.value].toFixed(1)}}</strong></td>
             </template>
+            <td v-if="edit" colspan="100%"><v-btn small @click="dialog = true">Ver Totales Comida</v-btn></td>
+            <td v-else colspan="100%"></td>
           </tr>
         </template>
   </v-data-table>
+   <!-- DIALOG PARA VER LOS TOTALES -->
+        <v-dialog
+          v-model="dialog"
+          scrollable
+         :overlay="false"
+          transition="dialog-transition">
+          <v-card>
+          <totales :totales="totales"></totales>
+          </v-card>
+        </v-dialog>
+  </div>
 </template>
 
 <script>
 import DetallePropiedadAlimento from '@/components/Minuta/DetallePropiedadesAlimento'
+import Totales from '@/components/Minuta/Totales'
 
 export default {
   data () {
@@ -72,10 +87,11 @@ export default {
       headerCantidad: {text: 'Cantidad', value: 'cantidad', align: 'left', sortable: false},
       headerAcciones: {text: 'Acciones', align: 'left', sortable: false},
       rows_per_page_items: [{'text': 'Todos', 'value': -1}, 5, 10, 25],
-      totalesC: {cantidad: 0, humedad: 0, energia: 0, proteinas: 0, carbohidratos: 0}
+      totalesC: {cantidad: 0, humedad: 0, energia: 0, proteinas: 0, carbohidratos: 0},
+      dialog: false
     }
   },
-  components: {DetallePropiedadAlimento},
+  components: {DetallePropiedadAlimento, Totales},
   props: ['comida', 'edit', 'indexComida', 'propiedades'],
   mounted () {
     let vm = this
@@ -136,7 +152,6 @@ export default {
         totales.carbohidratos += vm.getValor(alimento.cantidad, alimento.fibra)
       })
       vm.totales = totales
-      // vm.$emit('update:totales', totales)
     },
     getValor (cantidad, propiedad) {
       let valor = (cantidad * propiedad) / 100

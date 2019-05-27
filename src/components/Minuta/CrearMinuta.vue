@@ -1,14 +1,10 @@
 <template>
   <v-layout row wrap>
-    <v-flex xs12 md4>
-      <v-btn block @click="dialogConfiguracion = true">Configuración Minuta
-        <v-icon right>settings</v-icon>
-      </v-btn>
-    </v-flex>
-    <v-flex xs12>
-      <v-divider></v-divider>
-    </v-flex>
-    <v-flex xs12>
+    <template v-if="configuracionPrevia">
+      <configuracion-previa :previa="previa" @saltar-configuracion="configuracionPrevia = false"></configuracion-previa>
+    </template>
+    <template v-else>
+      <v-flex xs12>
       <v-stepper value="1">
         <v-stepper-header>
           <template v-for="(comida, indexComida) in comidas">
@@ -23,14 +19,17 @@
         </v-stepper-items>
       </v-stepper>
     </v-flex>
-    <v-flex offset-xs10 xs2>
-      <v-btn block @click="dialogGuardar = true" color="primary">Crear</v-btn>
+    <v-flex xs12 md2 lg2>
+      <v-btn block @click="dialogGuardar = true" color="primary">Guardar Minuta</v-btn>
     </v-flex>
-
+    <v-flex xs12 md3 lg3>
+      <v-btn block @click="previa = false;configuracionPrevia = true">Configuración Minuta
+        <v-icon right>settings</v-icon>
+      </v-btn>
+    </v-flex>
     <dialog-guardar-minta @closeDialog="dialogGuardar = false" :dialog="dialogGuardar"></dialog-guardar-minta>
     <configuracion-minuta :configuracionMinuta="[]" @nuevaConfiguracion="nuevaConfiguracion" :dialog="dialogConfiguracion" @closeDialog="dialogConfiguracion = false" ></configuracion-minuta>
-
-
+    </template>
   </v-layout>
 </template>
 
@@ -38,6 +37,7 @@
 import CrearComidaMinuta from '@/components/Minuta/CrearComidaMinuta'
 import DialogGuardarMinta from '@/components/Minuta/DialogGuardarMinuta'
 import ConfiguracionMinuta from '@/components/Minuta/ConfiguracionMinuta'
+import ConfiguracionPrevia from '@/components/Minuta/ConfiguracionPrevia'
 import { createHelpers } from 'vuex-map-fields'
 const { mapMultiRowFields } = createHelpers({
   getterType: 'minuta/getField',
@@ -49,13 +49,16 @@ export default {
     return {
       dialogGuardar: false,
       dialogConfiguracion: false,
-      menu: false
+      menu: false,
+      configuracionPrevia: true,
+      previa: true
     }
   },
   components: {
     CrearComidaMinuta,
     DialogGuardarMinta,
-    ConfiguracionMinuta
+    ConfiguracionMinuta,
+    ConfiguracionPrevia
   },
   mounted () {
     this.cargarPropiedades()
@@ -74,11 +77,7 @@ export default {
     }
   },
   computed: {
-    ...mapMultiRowFields(['comidas']),
-    totalCantidad () {
-      let total = 0
-      return total
-    }
+    ...mapMultiRowFields(['comidas'])
   }
 }
 </script>

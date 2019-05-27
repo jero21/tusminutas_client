@@ -1,7 +1,11 @@
 import actions from './actions'
 import getters from './getters'
 import mutations from './mutations'
+import Minuta from '../../../models/Minuta'
 
+const state = new Minuta()
+
+/*
 const state = {
   nombre: '',
   descripcion: '',
@@ -17,6 +21,7 @@ const state = {
   ],
   configuracion: []
 }
+*/
 
 export default {
   namespaced: true,

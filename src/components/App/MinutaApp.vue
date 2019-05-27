@@ -166,6 +166,7 @@ export default {
   .img-profile {
     margin: 5px;
     border-radius: 30px;
+    max-width: 50px;
   }
 
 </style>
