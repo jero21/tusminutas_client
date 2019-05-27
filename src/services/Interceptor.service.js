@@ -13,7 +13,7 @@ export default function (request, next) {
   next(response => {
     if (response.status === 401) {
       credentials.clearCredentials()
-      window.location.href = (process.env.address.spa + 'login')
+      window.location.href = ('https://api.tusminutas.cl/api/' + 'login')
     }
   })
 }

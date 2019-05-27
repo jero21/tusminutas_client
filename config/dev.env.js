@@ -7,6 +7,6 @@ module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   address: {
     api: "'http://localhost:8000/api/'",
-    spa: '"http://localhost:8080/"'
+    spa: '"http://localhost:7070/"'
   }
 })
