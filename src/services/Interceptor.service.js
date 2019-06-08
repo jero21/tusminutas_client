@@ -3,8 +3,8 @@ import Credentials from '@/services/Credentials.service.js'
 export default function (request, next) {
   const credentials = new Credentials()
   // console.log(credentials.getCurrentUser())
-  if (request.url.includes(process.env.address.api)) {
-    if (!(request.url === process.env.address.api + 'auth_login')) {
+  if (request.url.includes('https://api.tusminutas.cl/api/')) {
+    if (!(request.url === 'https://api.tusminutas.cl/api/' + 'auth_login')) {
       let token = credentials.getCurrentUser().token
       request.headers.set('Authorization', `Bearer ${token}`)
     }
