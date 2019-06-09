@@ -8,7 +8,7 @@
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12">
               <v-toolbar dark color="primary">
-                <v-toolbar-title>TusMinutas</v-toolbar-title>
+                <v-toolbar-title>Bienvenido a TusMinutas.cl</v-toolbar-title>
               </v-toolbar>
                 <v-card-text>
                   <v-layout row wrap>
@@ -23,9 +23,10 @@
                     </g-signin-button>
                     </v-flex>
                     <v-flex xs12>
+                    <!--
                     <v-btn block dark color="#3b5998">
                       Iniciar Sesión con Facebook
-                    </v-btn>
+                    </v-btn> -->
                     </v-flex>
                   </v-layout>
                 </v-card-text>
