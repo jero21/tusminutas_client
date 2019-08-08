@@ -2,11 +2,16 @@
   <v-card>
     <v-card-text>
         <v-layout row wrap>
-          <v-flex xs8>
+          <v-flex xs9>
             <h5 class="headline">{{ minuta.nombre }}</h5>
           </v-flex>
-          <v-flex xs4>
-            <h5 class="subheading text-xs-right">{{ moment(minuta.created_at).format('DD-MM-YYYY') }}</h5>
+          <v-flex xs2>
+            <h5 class="subheading text-md-right" style="padding:10px">{{ moment(minuta.created_at).format('DD-MM-YYYY') }}</h5>
+          </v-flex>
+          <v-flex xs1>
+            <v-btn outline color="green" style="float:right;" @click="exportarExcel()">EXCEL
+              <v-icon right>save</v-icon>
+            </v-btn>
           </v-flex>
           <v-flex xs12>
             <v-text-field :rows="2" multi-line readonly :value="minuta.descripcion || ''" label="Descripción" color="orange"></v-text-field>
@@ -95,6 +100,9 @@ export default {
     })
   },
   methods: {
+    exportarExcel () {
+      window.open('http://localhost:8000/api/excel/' + this.minuta.id, '_blank')
+    },
     cargarPropiedades () {
       let vm = this
       vm.$store.dispatch('loadPropiedades').then(() => {
