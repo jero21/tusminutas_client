@@ -28,7 +28,6 @@
           item-text="nombre_real"
           persistent-hint
           autocomplete
-          cache-items
           return-object>
         </v-select>
       </v-flex>
@@ -99,6 +98,7 @@ export default {
       search: '',
       select: {},
       configuracion_minuta: [],
+      propiedades: [],
       pagination: {
         rowsPerPage: -1
       },
@@ -143,21 +143,31 @@ export default {
       vm.$emit('saltar-configuracion')
     },
     eliminarAlimento (index) {
+      let prop = this.configuracion_minuta[index]
+      prop.cant_maxima = 0
+      prop.configuracion_platos = []
       this.configuracion_minuta.splice(index, 1)
+      this.propiedades.push(prop)
+    },
+    eliminarPropiedadDeLista (propiedadId) {
+      let index = this.propiedades.findIndex(propiedad => propiedad.id === propiedadId)
+      this.propiedades.splice(index, 1)
+      console.log(this.propiedades)
     }
   },
   mounted () {
     let vm = this
     // vm.minuta = JSON.parse(JSON.stringify(vm.infoMinuta))
     vm.configuracion_minuta = JSON.parse(JSON.stringify(vm.configuracionPropiedades))
+    vm.propiedades = vm.propiedadesOriginales
     if (!vm.previa) {
       vm.conf.title = 'Configuración de la minuta.'
       vm.conf.btnText = 'Volver'
     }
   },
   computed: {
-    propiedades () {
-      return this.$store.getters.propiedades
+    propiedadesOriginales () {
+      return JSON.parse(JSON.stringify(this.$store.getters.propiedades))
     },
     infoMinuta () {
       return JSON.parse(JSON.stringify(this.$store.getters['minuta/infoMinuta']))
@@ -180,6 +190,7 @@ export default {
           cant_maxima: 0,
           configuracion_platos: JSON.parse(JSON.stringify(configuracionPlato))
         }
+        vm.eliminarPropiedadDeLista(data.id)
         vm.configuracion_minuta.push(configuracion)
         vm.select = {}
         vm.search = ''
