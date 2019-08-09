@@ -47,7 +47,7 @@
           </tr>
         </template>
         <template slot="expand" slot-scope="props">
-          <detalle-propiedad-alimento :item="props.item"></detalle-propiedad-alimento>
+          <detalle-propiedad-alimento :item="props.item" :comida="comida" :totales="totales"></detalle-propiedad-alimento>
         </template>
         <template slot="footer">
           <tr class="primary white--text">

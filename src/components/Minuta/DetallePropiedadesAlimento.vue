@@ -3,7 +3,7 @@
     <v-card-text>
       <v-layout row wrap>
         <v-flex :key="propiedad.id" v-for="propiedad in propiedades" xs4 md2>
-          <strong>{{ propiedad.nombre_real }} : </strong> {{ getValor(item[propiedad.nombre]).toFixed(1)}}
+          <strong :class="{'red--text':propiedadSuperaConfiguracion(propiedad.nombre) }">{{ propiedad.nombre_real }} : </strong> {{ getValor(item[propiedad.nombre]).toFixed(1)}}
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -12,15 +12,25 @@
 
 <script>
 export default {
-  props: ['item'],
+  props: ['item', 'comida', 'totales'],
   methods: {
     getValor (propiedad) {
       let valor = (this.item.cantidad * propiedad) / 100
       return valor
+    },
+    propiedadSuperaConfiguracion (propiedad) {
+      let superaMaximo = false
+      this.comida.configuracion.forEach(propiedadConfiguracion => {
+        if (propiedad === propiedadConfiguracion.nombre) {
+          if (this.totales[propiedad] > propiedadConfiguracion.cant_maxima) superaMaximo = true
+        }
+      })
+      return superaMaximo
     }
   },
   computed: {
     propiedades () {
+      console.log(this.$store.getters.propiedades)
       return this.$store.getters.propiedades
     }
   }
