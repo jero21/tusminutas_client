@@ -6,6 +6,9 @@ export default {
   limpiarMinuta (state) {
     Object.assign(state, new Minuta())
   },
+  setMinuta (state, minuta) {
+    Object.assign(state, minuta)
+  },
   agregarInformacionMinuta (state, {nombre, descripcion}) {
     state.nombre = nombre
     state.descripcion = descripcion

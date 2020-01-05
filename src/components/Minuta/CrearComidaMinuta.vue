@@ -1,5 +1,6 @@
 <template>
   <section>
+    <h3 v-if="isMobile">{{ comida.nombre }}</h3>
     <v-select
       :items="allAlimentos"
       :search-input.sync="search"
@@ -58,6 +59,7 @@ export default {
     return {
       select: {},
       search: '',
+      isMobile: false,
       menu: false,
       datosTabla: [
         {nombre_real: 'Humedad', text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: false},
@@ -72,6 +74,9 @@ export default {
       this.datosTabla.splice(this.datosTabla.indexOf(item), 1)
       this.datosTabla = [...this.datosTabla]
     }
+  },
+  created () {
+    this.isMobile = window.innerWidth < 950
   },
   computed: {
     allAlimentos () {

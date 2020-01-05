@@ -5,11 +5,11 @@
           <v-flex xs9>
             <h5 class="headline">{{ minuta.nombre }}</h5>
           </v-flex>
-          <v-flex xs2>
+          <v-flex xs3>
             <h5 class="subheading text-md-right" style="padding:10px">{{ moment(minuta.created_at).format('DD-MM-YYYY') }}</h5>
           </v-flex>
-          <v-flex xs1>
-            <v-btn outline color="green" style="float:right;" @click="exportarExcel()">EXCEL
+          <v-flex offset-xs9 xs3 class="text-md-right">
+            <v-btn outline color="green" @click="exportarExcel()">EXCEL
               <v-icon right>save</v-icon>
             </v-btn>
           </v-flex>
@@ -44,7 +44,7 @@
             <v-flex xs12 :key="index">
               <h3 class="title">{{ comida.nombre }}</h3>
               <br>
-              <tabla-alimentos-comida :propiedades="propiedades" :totales="comida.totales" :comida="comida" :indexComida="index"></tabla-alimentos-comida>
+              <tabla-alimentos-comida :propiedades="propiedades" :comida="comida" :indexComida="index"></tabla-alimentos-comida>
             </v-flex>
             <v-flex :key="index + 'total'" xs12>
               <v-expansion-panel>
@@ -58,6 +58,20 @@
              <v-divider></v-divider>
             </v-flex>
           </template>
+          <v-flex xs12>
+            <h3 class="title">Totales del Día</h3>
+            <v-flex xs12>
+              <v-card flat class="blue-grey lighten-5  scroll-y">
+                <v-card-text>
+                  <v-layout row wrap>
+                    <v-flex :key="propiedad.id" v-for="propiedad in propiedadesAlimentos" xs4 md2>
+                      <strong>{{ propiedad.nombre_real }} : </strong> {{ totalesDia[propiedad.nombre].toFixed(1) }}
+                    </v-flex>
+                  </v-layout>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-flex>
         </v-layout>
     </v-card-text>
   </v-card>
@@ -67,19 +81,14 @@
 import {minutaService} from '@/services/Minuta.service'
 import TablaAlimentosComida from '@/components/Minuta/TablaAlimentosComida'
 import Totales from '@/components/Minuta/Totales'
+import PropiedadesAlimento from '@/models/Alimento.model'
 export default {
   data () {
     return {
       minuta: {
         configuracion_minutas: []
       },
-      totales: {
-        cantidad: 0,
-        humedad: 0,
-        energia: 0,
-        proteinas: 0,
-        carbohidratos: 0
-      },
+      totalesDia: PropiedadesAlimento,
       propiedades: [
         {text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: false},
         {text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: false},
@@ -97,7 +106,17 @@ export default {
       let minuta = response.body
       minuta.comidas = JSON.parse(minuta.comidas)
       vm.minuta = minuta
+      vm.$store.commit('minuta/setMinuta', minuta)
+      vm.calcularTotales(response.body.comidas)
     })
+  },
+  beforeDestroy () {
+    this.$store.commit('minuta/limpiarMinuta')
+  },
+  computed: {
+    propiedadesAlimentos () {
+      return this.$store.getters.propiedades
+    }
   },
   methods: {
     exportarExcel () {
@@ -109,6 +128,22 @@ export default {
       }, () => {
         vm.$eventHub.$emit('showSnackBar', {message: 'Error al cargar las propiedades', color: 'red'})
       })
+    },
+    calcularTotales (comidas) {
+      let totalesComida = JSON.parse(JSON.stringify(PropiedadesAlimento))
+      comidas.forEach(comida => {
+        comida.alimentos.forEach(alimento => {
+          for (let prop in totalesComida) {
+            if (prop !== 'cantidad') {
+              totalesComida[prop] += (alimento.cantidad * alimento[prop] / 100)
+            } else {
+              totalesComida.cantidad += alimento.cantidad
+            }
+          }
+        })
+      })
+
+      this.totalesDia = totalesComida
     },
     totalComida (indexComida) {
       let totales = {
