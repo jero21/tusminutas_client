@@ -79,7 +79,9 @@ export default {
     },
     onSignInSuccess (googleUser) {
       let vm = this
-      vm.credentials.access_token = googleUser.Zi.access_token
+      console.log(googleUser)
+      vm.credentials.access_token = googleUser.wc.access_token
+      console.log(googleUser)
       vm.submit(vm.credentials)
     },
     onSignInError (error) {
