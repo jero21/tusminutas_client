@@ -5,7 +5,8 @@ Vue.use(VueResource)
 
 class ApiConnect {
   constructor (route) {
-    this.resource = Vue.resource('https://api.tusminutas.cl/api/' + route)
+    // this.resource = Vue.resource('https://api.tusminutas.cl/api/' + route)
+    this.resource = Vue.resource('http://localhost:8000/api/' + route)
   }
   getResource () {
     return this.resource
