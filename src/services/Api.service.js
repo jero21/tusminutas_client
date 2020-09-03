@@ -1,11 +1,18 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 
+// let url = 'https://api.tusminutas.cl/api/'
+let url = 'http://localhost:8000/api/'
+
 Vue.use(VueResource)
 
 class ApiConnect {
   constructor (route) {
-    this.resource = Vue.resource('https://api.tusminutas.cl/api/' + route)
+    this.url = url
+    this.resource = Vue.resource(this.url + route)
+  }
+  getUrl () {
+    return this.url
   }
   getResource () {
     return this.resource

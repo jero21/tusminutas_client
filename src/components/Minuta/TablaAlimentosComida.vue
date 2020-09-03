@@ -26,7 +26,7 @@
             <td v-else class="text-xs-left">{{ props.item.cantidad }}</td>
             <template>
               <td :key="propiedad.text" v-for="propiedad in propiedades" class="text-xs-left">
-                {{ getValor(props.item.cantidad, props.item[propiedad.value]).toFixed(1) }}
+                {{ getValor(props.item.cantidad, props.item[propiedad.value]).toFixed(1) }} {{ propiedad.unidad_medida }}
               </td>
             </template>
             <td colspan="100%" class="text-xs-left">

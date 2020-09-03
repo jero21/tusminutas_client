@@ -97,7 +97,8 @@ export default {
             let configuracionPlato = {
               nombre_real: propiedad.nombre_real,
               nombre: propiedad.nombre,
-              cant_maxima: configuracion.cant_maxima
+              cant_maxima: configuracion.cant_maxima,
+              unidad_medida: propiedad.unidad_media
             }
             cantMaxima += configuracion.cant_maxima
             configuracionPorPlato[indexComida].configuracion.push(configuracionPlato)
@@ -131,6 +132,7 @@ export default {
           nombre_real: data.nombre_real,
           nombre: data.nombre,
           cant_maxima: 0,
+          unidad_medida: data.unidad_media,
           configuracion_platos: JSON.parse(JSON.stringify(configuracionPlato))
         }
         vm.configuracion_minuta.push(configuracion)

@@ -1,11 +1,13 @@
 import Credentials from '@/services/Credentials.service.js'
+// let url = 'https://api.tusminutas.cl/api/'
+let url = 'http://localhost:8000/api/'
 
 export default function (request, next) {
   const credentials = new Credentials()
   // console.log(credentials.getCurrentUser())
-  if (request.url.includes('https://api.tusminutas.cl/api/')) {
-    if (!(request.url === 'https://api.tusminutas.cl/api/' + 'auth_login')) {
-      let token = credentials.getCurrentUser().token
+  if (request.url.includes(url)) {
+    if (!(request.url === url + 'auth_login')) {
+      let token = credentials.getCurrentUser() ? credentials.getCurrentUser().token : ''
       request.headers.set('Authorization', `Bearer ${token}`)
     }
   }
@@ -13,7 +15,7 @@ export default function (request, next) {
   next(response => {
     if (response.status === 401) {
       credentials.clearCredentials()
-      window.location.href = ('https://api.tusminutas.cl/api/' + 'login')
+      window.location.href = (url + 'login')
     }
   })
 }
