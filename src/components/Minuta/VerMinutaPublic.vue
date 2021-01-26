@@ -1,6 +1,14 @@
 <template>
-  <v-card>
-    <v-card-text>
+<v-app>
+    <v-toolbar
+        color="secondary"
+        dark>
+        <v-toolbar-title>TusMinutas</v-toolbar-title>
+      </v-toolbar>
+    <v-content>
+      <v-container grid-list-xl>
+        <v-card>
+        <v-card-text>
         <v-layout row wrap>
           <v-flex xs9>
             <h5 class="headline">{{ minuta.nombre }}</h5>
@@ -8,20 +16,21 @@
           <v-flex xs3>
             <h5 class="subheading text-md-right" style="padding:10px">{{ moment(minuta.created_at).format('DD-MM-YYYY') }}</h5>
           </v-flex>
-          <v-flex offset-xs9 xs3 class="text-md-right">
-            <v-btn outline color="green" @click="exportarExcel()">EXCEL
-              <v-icon right>save</v-icon>
-            </v-btn>
+          <v-flex xs12>
+            <v-text-field readonly :value="minuta.user.nombre" label="Profesional" color="orange"></v-text-field>
           </v-flex>
           <v-flex xs12>
-            <v-text-field :rows="2" multi-line readonly :value="minuta.descripcion || ''" label="Descripción" color="orange"></v-text-field>
+            <v-text-field readonly :value="minuta.patient.nombre" label="Paciente" color="orange"></v-text-field>
+          </v-flex>
+          <v-flex xs12>
+            <v-text-field :rows="2" multi-line readonly :value="minuta.patient.comentario" label="Recomendaciones" color="orange"></v-text-field>
           </v-flex>
           <template v-if="minuta.configuracion_minutas.length > 0">
             <v-flex xs12>
              <v-divider></v-divider>
             </v-flex>
             <v-flex xs12>
-              <h3 class="title">Máximos del Día</h3>
+              <h3 class="title">Máximos propiedades</h3>
             </v-flex>
             <v-flex xs6 md2 lg2 v-for="configuracion in minuta.configuracion_minutas" :key="'conf'+configuracion.id">
               <v-layout row wrap>
@@ -45,6 +54,17 @@
               <h3 class="title">{{ comida.nombre }}</h3>
               <br>
               <tabla-alimentos-comida :propiedades="propiedades" :comida="comida" :indexComida="index"></tabla-alimentos-comida>
+            </v-flex>
+            <v-flex xs12 md6 lg6 :key="index+ 'prop'">
+              <v-combobox
+                v-model="datosTabla"
+                :items="propiedades"
+                item-text="text"
+                item-value="value"
+                label="Elije las propiedades a ver"
+                chips
+                multiple>
+              </v-combobox>
             </v-flex>
             <v-flex :key="index + 'total'" xs12>
               <v-expansion-panel>
@@ -75,6 +95,9 @@
         </v-layout>
     </v-card-text>
   </v-card>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
@@ -100,12 +123,13 @@ export default {
   components: {TablaAlimentosComida, Totales},
   created () {
     let vm = this
-    let id = vm.$route.params.id
+    let id = vm.$route.params.code
     vm.cargarPropiedades()
-    minutaService.getById(id).then(response => {
+    minutaService.getByUuid(id).then(response => {
       let minuta = response.body
       minuta.comidas = JSON.parse(minuta.comidas)
       vm.minuta = minuta
+      console.log(vm.minuta)
       vm.$store.commit('minuta/setMinuta', minuta)
       vm.calcularTotales(response.body.comidas)
     })

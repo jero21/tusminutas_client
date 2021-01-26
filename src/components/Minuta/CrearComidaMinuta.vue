@@ -15,38 +15,38 @@
     <tabla-alimentos-comida :propiedades="datosTabla" ref="tablaAlimentos" :edit="true" :indexComida="indexComida" :comida="comida"></tabla-alimentos-comida>
     <v-layout row wrap>
       <v-flex xs12 md6 lg6>
-      <v-expansion-panel>
-        <v-expansion-panel-content>
-          <div slot="header">Maximos Propiedades</div>
-          <v-card>
-            <v-card-text>
-              <v-layout row wrap>
-                <v-flex v-if="comida.configuracion.length === 0" xs12>
-                  <blockquote style="font-size:15px;" class="blockquote">
-                    <v-icon small color="info">info</v-icon>
-                      Aún no configuras las propiedades máximas.
-                  </blockquote>
+        <v-expansion-panel>
+          <v-expansion-panel-content>
+            <div slot="header">Maximos Propiedades</div>
+            <v-card>
+              <v-card-text>
+                <v-layout row wrap>
+                  <v-flex v-if="comida.configuracion.length === 0" xs12>
+                    <blockquote style="font-size:15px;" class="blockquote">
+                      <v-icon small color="info">info</v-icon>
+                        Aún no configuras las propiedades máximas.
+                    </blockquote>
+                  </v-flex>
+                  <v-flex xs6 md3 lg3 v-for="(propiedadConfiguracion, index) in comida.configuracion" :key="index">
+                    <v-text-field :error="totales[propiedadConfiguracion.nombre] > propiedadConfiguracion.cant_maxima" readonly :value="propiedadConfiguracion.cant_maxima" :label="propiedadConfiguracion.nombre_real" color="red"></v-text-field>
                 </v-flex>
-                <v-flex xs6 md3 lg3 v-for="(propiedadConfiguracion, index) in comida.configuracion" :key="index">
-                  <v-text-field :error="totales[propiedadConfiguracion.nombre] > propiedadConfiguracion.cant_maxima" readonly :value="propiedadConfiguracion.cant_maxima" :label="propiedadConfiguracion.nombre_real" color="red"></v-text-field>
-              </v-flex>
-              </v-layout>
-            </v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-flex>
       <v-flex xs12 md6 lg6>
-      <v-combobox
-        v-model="datosTabla"
-        :items="propiedades"
-        item-text="nombre_real"
-        item-value="nombre_real"
-        label="Elije las propiedades a ver"
-        chips
-        multiple>
-      </v-combobox>
-    </v-flex>
+        <v-combobox
+          v-model="datosTabla"
+          :items="propiedades"
+          item-text="nombre_real"
+          item-value="nombre_real"
+          label="Elije las propiedades a ver"
+          chips
+          multiple>
+        </v-combobox>
+      </v-flex>
     </v-layout>
   </section>
 </template>
@@ -62,8 +62,8 @@ export default {
       isMobile: false,
       menu: false,
       datosTabla: [
-        {nombre_real: 'Humedad', text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: false},
-        {nombre_real: 'Energía', text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: false}
+        {nombre_real: 'Humedad', text: 'Humedad (%)', value: 'humedad', align: 'left', unidad_medida: '%', sortable: false},
+        {nombre_real: 'Energía', text: 'Energía (kcal)', value: 'energia', align: 'left', unidad_medida: 'cal', sortable: false}
       ]
     }
   },
@@ -90,6 +90,7 @@ export default {
       propiedades.forEach(propiedad => {
         propiedad.text = propiedad.nombre_real
         propiedad.value = propiedad.nombre
+        propiedad.unidad_medida = propiedad.unidad_medida
         propiedad.align = 'left'
         propiedad.sortable = false
       })

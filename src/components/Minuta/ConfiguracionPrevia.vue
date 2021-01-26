@@ -56,7 +56,7 @@
                           v-model.number="plato.cant_maxima"
                           class="mx-3 input-porcentaje"
                           type="Number"
-                          placeholder="gr"
+                          :placeholder="props.item.unidad_medida"
                           flat>
                         </v-text-field>
                       </v-list-tile-content>
@@ -121,7 +121,8 @@ export default {
             let configuracionPlato = {
               nombre_real: propiedad.nombre_real,
               nombre: propiedad.nombre,
-              cant_maxima: configuracion.cant_maxima
+              cant_maxima: configuracion.cant_maxima,
+              unidad_medida: propiedad.unidad_media
             }
             cantMaxima += configuracion.cant_maxima
             configuracionPorPlato[indexComida].configuracion.push(configuracionPlato)
@@ -152,7 +153,6 @@ export default {
     eliminarPropiedadDeLista (propiedadId) {
       let index = this.propiedades.findIndex(propiedad => propiedad.id === propiedadId)
       this.propiedades.splice(index, 1)
-      console.log(this.propiedades)
     }
   },
   mounted () {
@@ -187,6 +187,7 @@ export default {
           id_propiedad: data.id,
           nombre_real: data.nombre_real,
           nombre: data.nombre,
+          unidad_medida: data.unidad_medida,
           cant_maxima: 0,
           configuracion_platos: JSON.parse(JSON.stringify(configuracionPlato))
         }
@@ -195,6 +196,9 @@ export default {
         vm.select = {}
         vm.search = ''
       }
+    },
+    propiedadesOriginales (data) {
+      this.propiedades = this.propiedadesOriginales
     }
   }
 }

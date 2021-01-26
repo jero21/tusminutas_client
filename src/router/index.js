@@ -7,6 +7,7 @@ import CrearMinuta from '@/components/Minuta/CrearMinuta'
 import TablaComposicion from '@/components/TablaComposicion/TablaComposicion'
 import MisAlimentos from '@/components/Alimentos/MisAlimentos'
 import Login from '@/components/App/Login'
+import VerMinutaPublic from '@/components/Minuta/VerMinutaPublic'
 
 import Credentials from '@/services/Credentials.service.js'
 
@@ -15,6 +16,7 @@ const credentials = new Credentials()
 Vue.use(Router)
 
 const router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -51,6 +53,10 @@ const router = new Router({
     {
       path: '/login',
       component: Login
+    },
+    {
+      path: '/share/:code',
+      component: VerMinutaPublic
     }
   ]
 })
@@ -62,6 +68,7 @@ router.beforeEach((to, from, next) => {
     else next()
   } else {
     if (to.path === '/login') next()
+    if (to.path.indexOf('/share') !== -1) next()
     else next({path: '/login'})
   }
 })

@@ -3,7 +3,7 @@
     <v-card-text>
       <v-layout row wrap>
         <v-flex :key="propiedad.id" v-for="propiedad in propiedades" xs4 md2>
-          <strong :class="{'red--text':propiedadSuperaConfiguracion(propiedad.nombre) }">{{ propiedad.nombre_real }} : </strong> {{ getValor(item[propiedad.nombre]).toFixed(1)}}
+          <strong :class="{'red--text':propiedadSuperaConfiguracion(propiedad.nombre) }">{{ propiedad.nombre_real }} : </strong> {{ getValor(item[propiedad.nombre]).toFixed(1)}} {{ propiedad.unidad_medida }}
         </v-flex>
       </v-layout>
     </v-card-text>
