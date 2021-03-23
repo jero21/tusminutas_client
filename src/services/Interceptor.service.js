@@ -1,6 +1,6 @@
 import Credentials from '@/services/Credentials.service.js'
-let url = 'https://api.tusminutas.cl/api/'
-// let url = 'http://localhost:8000/api/'
+// let url = 'https://api.tusminutas.cl/api/'
+let url = 'http://localhost:8000/api/'
 
 export default function (request, next) {
   const credentials = new Credentials()

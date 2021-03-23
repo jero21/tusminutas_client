@@ -77,10 +77,19 @@ export default {
         console.log(err)
       })
     },
+    getToken (googleUser) {
+      // let token = ''
+      for (var property in googleUser) {
+        if (googleUser[property].access_token) {
+          return googleUser[property].access_token
+        }
+      }
+    },
     onSignInSuccess (googleUser) {
       console.log(googleUser)
       let vm = this
-      vm.credentials.access_token = googleUser.Bc.access_token
+      vm.credentials.access_token = vm.getToken(googleUser)
+      console.log(this.credentials)
       vm.submit(vm.credentials)
     },
     onSignInError (error) {
