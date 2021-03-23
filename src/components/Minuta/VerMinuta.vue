@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     exportarExcel () {
-      window.open('https://api.tusminutas.cl/api/excel/' + this.minuta.id, '_blank')
+      window.open('http://localhost:8000/api/excel/' + this.$route.params.id, '_blank')
     },
     cargarPropiedades () {
       let vm = this
