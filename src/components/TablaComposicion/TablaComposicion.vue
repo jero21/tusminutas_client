@@ -57,6 +57,23 @@
         <td class="text-xs-left">{{ props.item.proteinas }}</td>
         <td class="text-xs-left">{{ props.item.fibra }}</td>
         <td class="text-xs-left">{{ props.item.calcio }}</td>
+        <td>
+          <v-btn @click="props.expanded = !props.expanded" small flat icon>
+            <v-icon v-if="!props.expanded">expand_more</v-icon>
+            <v-icon v-else>expand_less</v-icon>
+          </v-btn>
+        </td>
+      </template>
+      <template slot="expand" slot-scope="props">
+          <v-card flat style="max-height: 200px" class="blue-grey lighten-5  scroll-y">
+            <v-card-text>
+              <v-layout row wrap>
+                <v-flex :key="propiedad.id" v-for="propiedad in propiedades" xs4 md2>
+                  <strong>{{ propiedad.nombre_real }} : </strong> {{ props.item[propiedad.nombre] }} {{ propiedad.unidad_medida }}
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+          </v-card>
       </template>
     </v-data-table>
   </v-flex>
@@ -64,6 +81,7 @@
 </template>
 
 <script>
+import DetallePropiedadAlimento from '@/components/Minuta/DetallePropiedadesAlimento'
 export default {
   data () {
     return {
@@ -88,7 +106,8 @@ export default {
         {text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: true},
         {text: 'Proteinas (gr)', value: 'proteinas', align: 'left', sortable: true},
         {text: 'Fibra (gr)', value: 'fibra', align: 'left', sortable: true},
-        {text: 'Calcio (mg)', value: 'calcio', align: 'left', sortable: true}
+        {text: 'Calcio (mg)', value: 'calcio', align: 'left', sortable: true},
+        {text: ''}
       ],
       items: [],
       buscar: '',
@@ -101,12 +120,15 @@ export default {
       rows_per_page_items: [{'text': 'Todos', 'value': -1}]
     }
   },
+  components: {DetallePropiedadAlimento},
   mounted () {
     let vm = this
     vm.items = vm.alimentos.filter(alimento => {
       return alimento.grupo === 'Lácteos'
     })
     if (vm.alimentos.length === 0) vm.cargarAlimentos()
+
+    vm.cargarPropiedades()
   },
   methods: {
     setGrupo (grupo) {
@@ -138,6 +160,13 @@ export default {
       vm.snackbar.color = color
       vm.snackbar.message = message
       vm.snackbar.model = true
+    },
+    cargarPropiedades () {
+      let vm = this
+      vm.$store.dispatch('loadPropiedades').then(() => {
+      }, () => {
+        vm.$eventHub.$emit('showSnackBar', {message: 'Error al cargar las propiedades', color: 'red'})
+      })
     }
   },
   computed: {
@@ -163,6 +192,9 @@ export default {
           return alimento.grupo === grupo
         })
       }
+    },
+    propiedades () {
+      return this.$store.getters.propiedades
     }
   }
 }
