@@ -15,7 +15,7 @@ export default function (request, next) {
   next(response => {
     if (response.status === 401) {
       credentials.clearCredentials()
-      window.location.href = (url + 'login')
+      window.location.href = ('https://app.tusminutas.cl/login')
     }
   })
 }
