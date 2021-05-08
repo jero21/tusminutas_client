@@ -40,9 +40,9 @@
 
     <v-tooltip v-model="tooltip" top>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" @click="crearAlimento()" bottom fixed right fab dark color="primary">
-      <v-icon dark>add</v-icon>
-    </v-btn>
+        <v-btn class="mx-2" v-on="on" @click="crearAlimento()" bottom fixed right fab dark color="primary">
+          <v-icon dark>add</v-icon>
+        </v-btn>
       </template>
       <span>Crear aquí tu alimento</span>
     </v-tooltip>

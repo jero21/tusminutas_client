@@ -13,22 +13,27 @@
       </v-flex>
       <v-flex v-for="minuta in minutas" :key="minuta.id" xs12 md4>
         <v-card>
-          <v-toolbar color="orange" dark>
+          <v-toolbar color="secondary" dark>
             <v-toolbar-title> {{ minuta.nombre }} </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon @click="dialog = true; minutaAction = minuta">
-              <v-icon color="red">delete</v-icon>
-            </v-btn>
+            <v-tooltip right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-on="on" @click="dialog = true; minutaAction = minuta">
+                  <v-icon color="grey">delete</v-icon>
+                </v-btn>
+              </template>  
+              <span>Eliminar Minuta</span>
+           </v-tooltip> 
           </v-toolbar>
           <v-card-text>
             <v-flex xs12>
               <v-textarea readonly  :rows="2" :value="minuta.descripcion" label="Descripción" color="secondary"></v-textarea>
             </v-flex>
             <v-flex xs12>
-              <v-text-field readonly :value="moment(minuta.created_at).format('DD-MM-YYYY')" label="Fecha de Creación" color="orange"></v-text-field>
+              <v-text-field readonly :value="moment(minuta.created_at).format('DD-MM-YYYY')" label="Fecha de Creación" color="secondary"></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-btn @click="goTo('minutas', {id: minuta.id})" dark block color="orange">Ver Minuta</v-btn>
+              <v-btn @click="goTo('minutas', {id: minuta.id})" dark block color="secondary">Ver Minuta</v-btn>
             </v-flex>
             <v-flex xs12>
               <v-btn @click="dialogShare = true; showMinute(minuta.id)" dark block color="blue">Compartir</v-btn>
@@ -42,7 +47,7 @@
           <v-card-title primary-title>
             <div>
               <h3 class="headline mb-0">Eliminar Minuta</h3>
-              <div>Esta seguro(a) de eliminar la minuta {{ minutaAction.nombre }}</div>
+              <div>Esta seguro(a) de eliminar la minuta: {{ minutaAction.nombre }}</div>
             </div>
           </v-card-title>
           <v-card-actions>
@@ -61,17 +66,17 @@
         </v-toolbar>
           <v-card-text class="text--primary">
             <v-flex xs12>
-              <v-text-field v-model="patient.nombre"  label="Paciente" color="secondary"></v-text-field>
+              <v-text-field v-model="patient.nombre"  label="Nombre del paciente" color="secondary"></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-textarea v-model="patient.comentario" :rows="2" label="Recomendaciones" color="secondary"></v-textarea>
+              <v-textarea v-model="patient.comentario" :rows="2" label="Recomendaciones y observaciones" color="secondary"></v-textarea>
             </v-flex>
             <v-flex v-if="minutaAction.patient" xs12>
               <v-text-field :value="url + minutaAction.uuid" readonly label="Enlace para compartir" color="secondary">
               </v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-btn @click="updatePatient(patient)" dark color="blue">Guardar Cambios</v-btn>
+              <v-btn @click="updatePatient(patient)" dark block color="blue">Guardar Cambios</v-btn>
             </v-flex>
           </v-card-text>
         </v-card>
@@ -107,7 +112,7 @@ export default {
       },
       dialog: false,
       dialogShare: false,
-      url: 'https://tusminutas.cl/share/',
+      url: 'https://app.tusminutas.cl/share/',
       patient: {}
     }
   },
