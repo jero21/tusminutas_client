@@ -46,8 +46,9 @@
                 xs12
                 md3>
                 <v-card>
-                  <v-card-title><h4>{{ props.item.nombre_real }}</h4></v-card-title>
+                  <v-card-title><h4>{{ props.item.nombre_real }} ({{ props.item.unidad_medida }})</h4></v-card-title>
                   <v-divider></v-divider>
+                  
                   <v-list dense>
                     <v-list-tile :key="index" v-for="(plato, index) in props.item.configuracion_platos">
                       <v-list-tile-content>{{ plato.nombre }}</v-list-tile-content>
@@ -117,12 +118,13 @@ export default {
       vm.configuracion_minuta.forEach((propiedad) => {
         let cantMaxima = 0
         propiedad.configuracion_platos.forEach((configuracion, indexComida) => {
+          console.log(propiedad)
           if (configuracion.cant_maxima) {
             let configuracionPlato = {
               nombre_real: propiedad.nombre_real,
               nombre: propiedad.nombre,
               cant_maxima: configuracion.cant_maxima,
-              unidad_medida: propiedad.unidad_media
+              unidad_medida: propiedad.unidad_medida
             }
             cantMaxima += configuracion.cant_maxima
             configuracionPorPlato[indexComida].configuracion.push(configuracionPlato)

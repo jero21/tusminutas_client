@@ -57,7 +57,7 @@
                 </v-select>
             </v-flex>
             <v-flex :key="propiedad.id" v-for="propiedad in propiedades" xs12 md6>
-              <v-text-field :disabled="type === 'ver'" :rules="propiedadRule()" type="Number" v-model.Number="alimento[propiedad.nombre]" :label="propiedad.nombre_real" color="secondary" required></v-text-field>
+              <v-text-field :disabled="type === 'ver'" :rules="propiedadRule()" type="Number" v-model.Number="alimento[propiedad.nombre]" :label="`${propiedad.nombre_real} (${propiedad.unidad_medida})`" color="secondary" required></v-text-field>
             </v-flex>
             </v-layout>
           </v-form>

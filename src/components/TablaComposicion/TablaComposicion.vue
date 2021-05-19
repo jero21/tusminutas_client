@@ -101,13 +101,7 @@ export default {
       ],
       headers: [
         {text: 'Alimento', value: 'nombre', align: 'left', sortable: true},
-        {text: 'Origen', value: 'origen', align: 'left', sortable: true},
-        {text: 'Humedad (%)', value: 'humedad', align: 'left', sortable: true},
-        {text: 'Energía (kcal)', value: 'energia', align: 'left', sortable: true},
-        {text: 'Proteinas (gr)', value: 'proteinas', align: 'left', sortable: true},
-        {text: 'Fibra (gr)', value: 'fibra', align: 'left', sortable: true},
-        {text: 'Calcio (mg)', value: 'calcio', align: 'left', sortable: true},
-        {text: ''}
+        {text: 'Origen', value: 'origen', align: 'left', sortable: true}
       ],
       items: [],
       buscar: '',
@@ -164,6 +158,16 @@ export default {
     cargarPropiedades () {
       let vm = this
       vm.$store.dispatch('loadPropiedades').then(() => {
+        vm.headers = [vm.headers[0], vm.headers[1]]
+        vm.propiedades.forEach(propiedad => {
+          propiedad.text = `${propiedad.nombre_real} (${propiedad.unidad_medida})`
+          propiedad.value = propiedad.nombre
+          propiedad.unidad_medida = propiedad.unidad_medida
+          propiedad.align = 'left'
+          propiedad.sortable = false
+          if ([2, 3, 4, 5, 6].includes(propiedad.id)) vm.headers.push(propiedad)
+        })
+        vm.headers.push({})
       }, () => {
         vm.$eventHub.$emit('showSnackBar', {message: 'Error al cargar las propiedades', color: 'red'})
       })

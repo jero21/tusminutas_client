@@ -25,6 +25,15 @@
               <v-textarea :rules="[v => !!v || 'Se requiere una descripción']" v-model="minuta.descripcion" label="Descripción Minuta" color="secondary"></v-textarea>
             </v-flex>
             <v-flex xs12>
+              <v-alert
+                v-if="meals_empty"
+                :value="true"
+                color="info"
+                icon="info">
+                No tine alimentos o comidas en <strong>{{ meals_empty }}</strong>
+              </v-alert>
+            </v-flex>
+            <v-flex xs12>
               <v-btn @click="guardarMinuta(minuta)" :disabled="!valid" block color="primary">Guardar</v-btn>
             </v-flex>
             </v-layout>
@@ -45,6 +54,7 @@ export default {
         nombre: '',
         descripcion: ''
       },
+      meals_empty: '',
       nombreRule: [v => !!v || `Debe ingresar un Nombre`]
     }
   },
@@ -77,10 +87,14 @@ export default {
     dialog (val) {
       if (val) {
         let vm = this
+        vm.meals_empty = ''
         let minutaState = vm.$store.getters['minuta/minutaActual']
         let minuta = JSON.parse(JSON.stringify(minutaState))
         vm.minuta.nombre = minuta.nombre
         vm.minuta.descripcion = minuta.descripcion
+        minuta.comidas.forEach(comida => {
+          if (comida.alimentos.length === 0) vm.meals_empty += vm.meals_empty.length === 0 ? comida.nombre : `, ${comida.nombre}`
+        })
       }
     }
   }

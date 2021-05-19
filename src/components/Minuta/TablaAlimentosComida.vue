@@ -26,7 +26,7 @@
             <td v-else class="text-xs-left">{{ props.item.cantidad }}</td>
             <template>
               <td :key="propiedad.text" v-for="propiedad in propiedades" class="text-xs-left">
-                {{ getValor(props.item.cantidad, props.item[propiedad.value]).toFixed(1) }} {{ propiedad.unidad_medida }}
+                {{ getValor(props.item.cantidad, props.item[propiedad.value]).toFixed(1) }}
               </td>
             </template>
             <td colspan="100%" class="text-xs-left">
@@ -84,7 +84,7 @@ export default {
     return {
       headers: [],
       headerAlimento: {text: 'Alimento', value: 'nombre', align: 'left', sortable: false},
-      headerCantidad: {text: 'Cantidad', value: 'cantidad', align: 'left', sortable: false},
+      headerCantidad: {text: 'Cantidad (g)', value: 'cantidad', align: 'left', sortable: false},
       headerAcciones: {text: 'Acciones', align: 'left', sortable: false},
       rows_per_page_items: [{'text': 'Todos', 'value': -1}, 5, 10, 25],
       totalesC: {cantidad: 0, humedad: 0, energia: 0, proteinas: 0, carbohidratos: 0},

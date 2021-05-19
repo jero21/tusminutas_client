@@ -12,10 +12,12 @@ import InterceptorApi from '@/services/Interceptor.service'
 import store from '@/store/index'
 import GSignInButton from 'vue-google-signin-button'
 import moment from 'moment'
+import VueClipboard from 'vue-clipboard2'
 
 Vue.prototype.moment = moment
 Vue.prototype.$eventHub = new Vue()
 Vue.use(GSignInButton)
+Vue.use(VueClipboard)
 
 Vue.use(Vuetify, { theme: {
   primary: '#0097A7',

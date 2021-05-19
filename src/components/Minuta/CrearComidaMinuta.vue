@@ -28,7 +28,7 @@
                     </blockquote>
                   </v-flex>
                   <v-flex xs6 md3 lg3 v-for="(propiedadConfiguracion, index) in comida.configuracion" :key="index">
-                    <v-text-field :error="totales[propiedadConfiguracion.nombre] > propiedadConfiguracion.cant_maxima" readonly :value="propiedadConfiguracion.cant_maxima" :label="propiedadConfiguracion.nombre_real" color="red"></v-text-field>
+                    <v-text-field :error="totales[propiedadConfiguracion.nombre] > propiedadConfiguracion.cant_maxima" readonly :value="propiedadConfiguracion.cant_maxima + propiedadConfiguracion.unidad_medida" :label="propiedadConfiguracion.nombre_real" color="red"></v-text-field>
                 </v-flex>
                 </v-layout>
               </v-card-text>
@@ -61,10 +61,7 @@ export default {
       search: '',
       isMobile: false,
       menu: false,
-      datosTabla: [
-        {nombre_real: 'Humedad', text: 'Humedad (%)', value: 'humedad', align: 'left', unidad_medida: '%', sortable: false},
-        {nombre_real: 'Energía', text: 'Energía (kcal)', value: 'energia', align: 'left', unidad_medida: 'cal', sortable: false}
-      ]
+      datosTabla: []
     }
   },
   props: ['indexComida', 'comida'],
@@ -78,6 +75,13 @@ export default {
   created () {
     this.isMobile = window.innerWidth < 950
   },
+  mounted () {
+    let vm = this
+    vm.propiedades.forEach(propiedad => {
+      // Los numeros son los ids de las propiedades por default a mostrar en la tabla
+      if ([2, 3, 4, 5, 6].includes(propiedad.id)) vm.datosTabla.push(propiedad)
+    })
+  },
   computed: {
     allAlimentos () {
       return this.$store.getters.allAlimentos
@@ -88,7 +92,7 @@ export default {
     propiedades () {
       let propiedades = JSON.parse(JSON.stringify(this.$store.getters.propiedades))
       propiedades.forEach(propiedad => {
-        propiedad.text = propiedad.nombre_real
+        propiedad.text = `${propiedad.nombre_real} (${propiedad.unidad_medida})`
         propiedad.value = propiedad.nombre
         propiedad.unidad_medida = propiedad.unidad_medida
         propiedad.align = 'left'

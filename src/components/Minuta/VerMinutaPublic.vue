@@ -55,6 +55,7 @@
               <br>
               <tabla-alimentos-comida :propiedades="propiedades" :comida="comida" :indexComida="index"></tabla-alimentos-comida>
             </v-flex>
+            <!--
             <v-flex xs12 md6 lg6 :key="index+ 'prop'">
               <v-combobox
                 v-model="datosTabla"
@@ -66,6 +67,7 @@
                 multiple>
               </v-combobox>
             </v-flex>
+            -->
             <v-flex :key="index + 'total'" xs12>
               <v-expansion-panel>
                 <v-expansion-panel-content>
@@ -112,12 +114,7 @@ export default {
         configuracion_minutas: []
       },
       totalesDia: PropiedadesAlimento,
-      propiedades: [
-        {text: 'Humedad (%)', value: 'humedad', unidad_medida: '%', align: 'left', sortable: false},
-        {text: 'Energía (kcal)', value: 'energia', unidad_medida: 'Cal', align: 'left', sortable: false},
-        {text: 'Proteínas (gr)', value: 'proteinas', unidad_medida: 'g', align: 'left', sortable: false},
-        {text: 'Carbohidratos (gr)', value: 'fibra', unidad_medida: 'g', align: 'left', sortable: false}
-      ]
+      propiedades: []
     }
   },
   components: {TablaAlimentosComida, Totales},
@@ -149,6 +146,14 @@ export default {
     cargarPropiedades () {
       let vm = this
       vm.$store.dispatch('loadPropiedades').then(() => {
+        vm.propiedadesAlimentos.forEach(propiedad => {
+          propiedad.text = `${propiedad.nombre_real} (${propiedad.unidad_medida})`
+          propiedad.value = propiedad.nombre
+          propiedad.unidad_medida = propiedad.unidad_medida
+          propiedad.align = 'left'
+          propiedad.sortable = false
+          if ([2, 3, 4, 5, 6].includes(propiedad.id)) vm.propiedades.push(propiedad)
+        })
       }, () => {
         vm.$eventHub.$emit('showSnackBar', {message: 'Error al cargar las propiedades', color: 'red'})
       })

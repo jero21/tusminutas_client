@@ -72,8 +72,14 @@
               <v-textarea v-model="patient.comentario" :rows="2" label="Recomendaciones y observaciones" color="secondary"></v-textarea>
             </v-flex>
             <v-flex v-if="minutaAction.patient" xs12>
-              <v-text-field :value="url + minutaAction.uuid" readonly label="Enlace para compartir" color="secondary">
+              <v-text-field v-model="link" readonly label="Enlace para compartir" color="secondary">
               </v-text-field>
+              <v-btn
+                block
+                v-clipboard:copy="link"
+                v-clipboard:success="successCopy"
+                v-clipboard:error="errorCopy">Copiar enlace<v-icon right dark>content_copy</v-icon>
+              </v-btn>
             </v-flex>
             <v-flex xs12>
               <v-btn @click="updatePatient(patient)" dark block color="blue">Guardar Cambios</v-btn>
@@ -110,6 +116,7 @@ export default {
         color: '',
         message: ''
       },
+      link: '',
       dialog: false,
       dialogShare: false,
       url: 'https://app.tusminutas.cl/share/',
@@ -149,6 +156,7 @@ export default {
       minutaService.getById(id).then(response => {
         vm.minutaAction = response.body
         vm.patient = vm.minutaAction.patient ? vm.minutaAction.patient : {}
+        vm.link = vm.url + vm.minutaAction.uuid
       })
     },
     updatePatient (patient) {
@@ -163,6 +171,12 @@ export default {
       minutaService.updatePatient(data).then(response => {
         vm.showMinute(vm.minutaAction.id)
       })
+    },
+    successCopy (response) {
+      this.showSnackbar('Enlace copiado correctamente', 'green')
+    },
+    errorCopy (response) {
+      this.showSnackbar('Error al copiar enlace', 'red')
     }
   },
   created () {
