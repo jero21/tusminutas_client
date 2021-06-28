@@ -17,7 +17,7 @@
     </v-flex>
     <blockquote style="font-size:15px;" class="blockquote">
     <v-icon small color="info">info</v-icon>
-    Selecciona propiedades con sus cantidades maximas segun cada comida y podras ver alertas al momento de crear tu minuta.
+    Seleccione propiedades con sus cantidades máximas segun cada comida y podras ver alertas al momento de crear tu minuta.
   </blockquote>
      <v-flex xs12 md6 lg6>
         <v-select

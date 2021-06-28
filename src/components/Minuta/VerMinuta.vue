@@ -29,7 +29,7 @@
                   <h4>{{ configuracion.propiedad.nombre_real }}</h4>
                 </v-flex>
                 <v-flex xs12>
-                  <v-text-field readonly :value="configuracion.cant_maxima + configuracion.propiedad.unidad_medida" label="Cantidad Maxima" color="orange"></v-text-field>
+                  <v-text-field readonly :value="configuracion.cant_maxima + configuracion.propiedad.unidad_medida" label="Cantidad Máxima" color="orange"></v-text-field>
                 </v-flex>
                 <v-flex xs12  v-for="comida in configuracion.configuracion_tipo_comida" :key="comida.id">
                   <v-text-field readonly :value="comida.cant_maxima" :label="comida.tipo_comida.nombre" color="orange"></v-text-field>
@@ -120,7 +120,8 @@ export default {
   },
   methods: {
     exportarExcel () {
-      window.open('https://api.tusminutas.cl/api/excel/' + this.$route.params.id, '_blank')
+      // window.open('https://api.tusminutas.cl/api/excel/' + this.$route.params.id, '_blank')
+      window.open('http://localhost:8000/api/excel/' + this.$route.params.id, '_blank')
     },
     cargarPropiedades () {
       let vm = this
