@@ -46,7 +46,7 @@
                 xs12
                 md3>
                 <v-card>
-                  <v-card-title><h4>{{ props.item.nombre_real }} ({{ props.item.unidad_medida }})</h4></v-card-title>
+                  <v-card-title><h4>{{ props.item.nombre_real }}: {{ getTotalPropiedad(props.item.configuracion_platos) }} ({{ props.item.unidad_medida }})</h4></v-card-title>
                   <v-divider></v-divider>
                   
                   <v-list dense>
@@ -58,6 +58,19 @@
                           class="mx-3 input-porcentaje"
                           type="Number"
                           :placeholder="props.item.unidad_medida"
+                          flat>
+                        </v-text-field>
+                      </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile>
+                      <v-list-tile-content>Total</v-list-tile-content>
+                      <v-list-tile-content class="align-end">
+                        <v-text-field
+                          :value="getTotalPropiedad(props.item.configuracion_platos)"
+                          class="mx-3 input-porcentaje"
+                          readonly
+                          type="Number"
+                          
                           flat>
                         </v-text-field>
                       </v-list-tile-content>
@@ -76,7 +89,7 @@
   <v-flex xs12>
     <v-btn @click="guardarConfiguracion()" color="primary">Guardar</v-btn>
     <v-btn @click="saltarConfiguracion()">{{ conf.btnText }}</v-btn>
-    <v-btn @click="limpiarDatos()" v-if="!minutaEsNueva" color="orange" dark>Crear Nueva Minuta</v-btn>
+    <v-btn @click="limpiarDatos()" v-if="!minutaEsNueva && !edit" color="orange" dark>Crear Nueva Minuta</v-btn>
   </v-flex>
 </v-flex>
 </template>
@@ -110,7 +123,7 @@ export default {
       }
     }
   },
-  props: ['previa'],
+  props: ['previa', 'edit'],
   methods: {
     guardarConfiguracion () {
       let vm = this
@@ -118,7 +131,6 @@ export default {
       vm.configuracion_minuta.forEach((propiedad) => {
         let cantMaxima = 0
         propiedad.configuracion_platos.forEach((configuracion, indexComida) => {
-          console.log(propiedad)
           if (configuracion.cant_maxima) {
             let configuracionPlato = {
               nombre_real: propiedad.nombre_real,
@@ -155,6 +167,14 @@ export default {
     eliminarPropiedadDeLista (propiedadId) {
       let index = this.propiedades.findIndex(propiedad => propiedad.id === propiedadId)
       this.propiedades.splice(index, 1)
+    },
+    getTotalPropiedad (platos) {
+      let total = 0
+      platos.forEach(plato => {
+        total += plato.cant_maxima
+      })
+
+      return total
     }
   },
   mounted () {

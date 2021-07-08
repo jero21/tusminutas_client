@@ -45,14 +45,14 @@
                       <td class="text-xs-left">{{ props.item.nombre_real }}</td>
                       <template v-for="(plato, index) in props.item.configuracion_platos">
                         <td class="text-xs-left" :key="index">
-                        <v-text-field
-                          v-model.number="plato.cant_maxima"
-                          class="mx-3 input-porcentaje"
-                          type="Number"
-                          placeholder="gr"
-                          flat>
-                        </v-text-field>
-                      </td>
+                          <v-text-field
+                            v-model.number="plato.cant_maxima"
+                            class="mx-3 input-porcentaje"
+                            type="Number"
+                            placeholder="gr"
+                            flat>
+                          </v-text-field>
+                        </td>
                       </template>
                       <td>
                         <v-btn @click="eliminarAlimento(props.index)" fab dark small color="red">

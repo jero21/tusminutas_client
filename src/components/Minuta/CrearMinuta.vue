@@ -60,6 +60,11 @@ export default {
     ConfiguracionMinuta,
     ConfiguracionPrevia
   },
+  created () {
+    this.$store.commit('minuta/limpiarMinuta')
+    this.$store.commit('minuta/actualizarConfiguracion', [])
+    console.log(this.$store.getters['minuta/configuracion'])
+  },
   mounted () {
     this.cargarPropiedades()
   },

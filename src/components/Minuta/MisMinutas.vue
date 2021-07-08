@@ -36,6 +36,9 @@
               <v-btn @click="goTo('minutas', {id: minuta.id})" dark block color="secondary">Ver Minuta</v-btn>
             </v-flex>
             <v-flex xs12>
+              <v-btn @click="goTo(`minutas/${minuta.id}/editar`, '')" dark block color="secondary">Editar Minuta</v-btn>
+            </v-flex>
+            <v-flex xs12>
               <v-btn @click="dialogShare = true; showMinute(minuta.id)" dark block color="blue">Compartir</v-btn>
             </v-flex>
           </v-card-text>

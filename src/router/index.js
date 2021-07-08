@@ -8,6 +8,7 @@ import TablaComposicion from '@/components/TablaComposicion/TablaComposicion'
 import MisAlimentos from '@/components/Alimentos/MisAlimentos'
 import Login from '@/components/App/Login'
 import VerMinutaPublic from '@/components/Minuta/VerMinutaPublic'
+import EditMinute from '@/components/Minuta/EditMinute'
 
 import Credentials from '@/services/Credentials.service.js'
 
@@ -32,6 +33,11 @@ const router = new Router({
           path: 'minutas/:id',
           name: 'Ver Minuta',
           component: VerMinuta
+        },
+        {
+          path: 'minutas/:id/editar',
+          name: 'Editar Minuta',
+          component: EditMinute
         },
         {
           path: 'crear-minuta',
