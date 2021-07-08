@@ -23,7 +23,7 @@
             <v-text-field readonly :value="minuta.patient.nombre" label="Paciente" color="orange"></v-text-field>
           </v-flex>
           <v-flex xs12>
-            <v-text-field :rows="2" multi-line readonly :value="minuta.patient.comentario" label="Recomendaciones" color="orange"></v-text-field>
+            <v-text-field :rows="4" multi-line readonly :value="minuta.patient.comentario" label="Recomendaciones" color="orange"></v-text-field>
           </v-flex>
           <template v-if="minuta.configuracion_minutas.length > 0">
             <v-flex xs12>
