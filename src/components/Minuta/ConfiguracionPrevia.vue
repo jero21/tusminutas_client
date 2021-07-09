@@ -117,8 +117,8 @@ export default {
         rowsPerPage: -1
       },
       conf: {
-        title: 'Configuración previa de la minuta.',
-        info: 'Si deseas puedes saltar la configuracion previa.',
+        title: 'Requerimientos de la minuta.',
+        info: 'Si deseas puedes saltar la configuracion de requerimientos.',
         btnText: 'Saltar'
       }
     }
@@ -183,7 +183,7 @@ export default {
     vm.configuracion_minuta = JSON.parse(JSON.stringify(vm.configuracionPropiedades))
     vm.propiedades = vm.propiedadesOriginales
     if (!vm.previa) {
-      vm.conf.title = 'Configuración de la minuta.'
+      vm.conf.title = 'Configuración de Requerimientos de la Minuta'
       vm.conf.btnText = 'Volver'
     }
   },

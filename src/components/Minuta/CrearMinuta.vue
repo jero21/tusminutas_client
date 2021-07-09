@@ -23,7 +23,7 @@
       <v-btn block @click="dialogGuardar = true" color="primary">Guardar Minuta</v-btn>
     </v-flex>
     <v-flex xs12 md3 lg3>
-      <v-btn block @click="previa = false;configuracionPrevia = true">Configuración Minuta
+      <v-btn block @click="previa = false;configuracionPrevia = true">Requerimientos Minuta
         <v-icon right>settings</v-icon>
       </v-btn>
     </v-flex>

@@ -21,7 +21,7 @@
              <v-divider></v-divider>
             </v-flex>
             <v-flex xs12>
-              <h3 class="title">Máximos del Día</h3>
+              <h3 class="title">Requerimientos</h3>
             </v-flex>
             <v-flex xs6 md2 lg2 v-for="configuracion in minuta.configuracion_minutas" :key="'conf'+configuracion.id">
               <v-layout row wrap>
