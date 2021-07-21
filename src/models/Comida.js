@@ -5,5 +5,7 @@ export default class Comida {
     this.alimentos = []
     this.configuracion = []
     this.totales = {}
+    this.hour = ''
+    this.user_comments = ''
   }
 }

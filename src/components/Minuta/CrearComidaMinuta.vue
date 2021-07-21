@@ -1,11 +1,47 @@
 <template>
   <section>
     <h3 v-if="isMobile">{{ comida.nombre }}</h3>
+     <v-layout row wrap>
+    <v-flex xs4>
+        <v-menu
+        ref="menu"
+        v-model="menu2"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="time"
+        lazy
+        transition="scale-transition"
+        offset-y
+        full-width
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="comida.hour"
+            :label="`Horario ${comida.nombre}`"
+            prepend-icon="access_time"
+            readonly
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-time-picker
+          v-if="menu2"
+          v-model="comida.hour"
+          full-width
+          @click:minute="$refs.menu.save(time)"
+        ></v-time-picker>
+      </v-menu>
+      </v-flex>
+      <v-flex xs8>
+        <v-textarea v-model="comida.user_comments" rows="1" prepend-icon="description" :label="`Comentarios ${comida.nombre}`" color="secondary" required></v-textarea>
+      </v-flex>
+     </v-layout>
     <v-select
       :items="allAlimentos"
       :search-input.sync="search"
       v-model="select"
-      label="Busca alimentos para agregar a la comida"
+      :label="`Busca alimentos para agregar a ${comida.nombre}`"
       item-text="nombre"
       persistent-hint
       autocomplete
@@ -61,7 +97,10 @@ export default {
       search: '',
       isMobile: false,
       menu: false,
-      datosTabla: []
+      datosTabla: [],
+      time: null,
+      menu2: false,
+      modal2: false
     }
   },
   props: ['indexComida', 'comida'],

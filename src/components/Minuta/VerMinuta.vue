@@ -41,9 +41,21 @@
             </v-flex>
           </template>
           <template v-for="(comida, index) in minuta.comidas" v-if="comida.alimentos.length > 0">
+              <v-flex xs12 :key="index + 'title'">
+                <h3 class="title">{{ comida.nombre }}</h3>
+              </v-flex>
+              <v-flex xs4 v-if="comida.hour" :key="index + 'hour'">
+                <v-text-field
+            v-model="comida.hour"
+            :label="`Horario ${comida.nombre}`"
+            prepend-icon="access_time"
+            readonly
+          ></v-text-field>
+              </v-flex>
+              <v-flex xs8 :key="index + 'comments'"  v-if="comida.user_comments">
+                <v-textarea readonly v-model="comida.user_comments" rows="1" prepend-icon="description" :label="`Comentarios ${comida.nombre}`" color="secondary" required></v-textarea>
+              </v-flex>
             <v-flex xs12 :key="index">
-              <h3 class="title">{{ comida.nombre }}</h3>
-              <br>
               <tabla-alimentos-comida :propiedades="propiedades" :comida="comida" :indexComida="index"></tabla-alimentos-comida>
             </v-flex>
             <v-flex :key="index + 'total'" xs12>
