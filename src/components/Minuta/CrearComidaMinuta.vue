@@ -41,7 +41,7 @@
       :items="allAlimentos"
       :search-input.sync="search"
       v-model="select"
-      :label="`Busca alimentos para agregar a ${comida.nombre}`"
+      :label="labelSearch"
       item-text="nombre"
       persistent-hint
       autocomplete
@@ -127,6 +127,15 @@ export default {
     },
     totales () {
       return this.$store.getters['minuta/totalComida'](this.indexComida)
+    },
+    labelSearch () {
+      let text = ''
+      if (this.comida.nombre === 'Desayuno' || this.comida.nombre === 'Almuerzo') {
+        text = 'Busca alimentos para agregar al '
+      } else {
+        text = 'Busca alimentos para agregar a la '
+      }
+      return text + this.comida.nombre
     },
     propiedades () {
       let propiedades = JSON.parse(JSON.stringify(this.$store.getters.propiedades))

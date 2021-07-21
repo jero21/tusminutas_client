@@ -5,7 +5,7 @@
           <strong>{{ propiedad.nombre}}: </strong> {{ propiedad.cant_maxima}}
         </v-flex>
         <v-flex v-if="configuracionMinuta.length === 0"  xs12>
-          <strong>No hay configuración</strong>
+          <strong>No hay requerimientos comfigurados</strong>
         </v-flex>
       </v-layout>
   </v-card>

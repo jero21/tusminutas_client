@@ -8,7 +8,7 @@
     transition="dialog-transition">
     <v-card>
       <v-toolbar color="primary" dark>
-        <v-toolbar-title> Configuración Minuta </v-toolbar-title>
+        <v-toolbar-title> Configuración de Requerimientos de la Minuta</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="closeDialog()">
           <v-icon>close</v-icon>
