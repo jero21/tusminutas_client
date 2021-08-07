@@ -9,6 +9,7 @@ import MisAlimentos from '@/components/Alimentos/MisAlimentos'
 import Login from '@/components/App/Login'
 import VerMinutaPublic from '@/components/Minuta/VerMinutaPublic'
 import EditMinute from '@/components/Minuta/EditMinute'
+import Profile from '@/components/Profile/Profile'
 
 import Credentials from '@/services/Credentials.service.js'
 
@@ -53,6 +54,11 @@ const router = new Router({
           path: 'mis-alimentos',
           name: 'Mis Alimentos',
           component: MisAlimentos
+        },
+        {
+          path: 'perfil',
+          name: 'Perfil',
+          component: Profile
         }
       ]
     },

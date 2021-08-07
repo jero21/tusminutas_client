@@ -26,7 +26,8 @@
             <v-flex>{{credentialService.getCurrentUser().email}}</v-flex>
           </v-layout>
           <v-layout row wrap>
-            <v-btn @click="logout" style="margin:0px;" small outline color="error">Cerrar Sesión</v-btn>
+            <v-btn @click="goTo('perfil')" style="margin:0px;" small outline color="primary">Editar Perfil</v-btn>
+            <v-btn @click="logout" style="margin-left:0px;" small outline color="error">Cerrar Sesión</v-btn>
           </v-layout>
         </v-flex>
       </v-layout>
