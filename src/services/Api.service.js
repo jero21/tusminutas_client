@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 
-let url = 'https://api.tusminutas.cl/api/'
-// let url = 'http://localhost:8000/api/'
+// let url = 'https://api.tusminutas.cl/api/'
+let url = 'http://localhost:8000/api/'
 
 Vue.use(VueResource)
 

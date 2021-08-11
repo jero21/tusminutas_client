@@ -16,7 +16,7 @@
       </v-toolbar>
       <v-layout style="padding-top:6px;" row wrap>
         <v-flex xs3>
-          <img class="img-profile" :src="credentialService.getCurrentUser().avatar" alt="">
+          <img class="img-profile" :src="avatar" alt="">
         </v-flex>
         <v-flex style="padding-top:5px;" xs9>
           <v-layout row wrap>
@@ -117,16 +117,19 @@ export default {
         show: false,
         color: '',
         message: ''
-      }
+      },
+      avatar: ''
     }
   },
   created () {
     let vm = this
+    vm.avatar = vm.credentialService.getCurrentUser().avatar
     vm.$store.dispatch('loadAlimentos').then(() => {
     }, () => {
       vm.$root.$emit('error-carga-alimentos')
     })
     vm.$eventHub.$on('showSnackBar', vm.showSnackBar)
+    vm.$eventHub.$on('updateUser', vm.updateUser)
   },
   methods: {
     goTo (route) {
@@ -145,6 +148,9 @@ export default {
       vm.snackbar.message = data.message
       vm.snackbar.color = data.color
       vm.snackbar.show = true
+    },
+    updateUser () {
+      this.avatar = this.credentialService.getCurrentUser().avatar
     }
   }
 }
@@ -165,9 +171,11 @@ export default {
   }
 
   .img-profile {
+    object-fit: cover;
     margin: 5px;
     border-radius: 30px;
-    max-width: 50px;
+    width: 50px;
+    height: 50px;
   }
 
 </style>

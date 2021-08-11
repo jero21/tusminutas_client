@@ -3,10 +3,21 @@
     <v-card-text>
       <v-layout row wrap>
         <v-flex xs12>
+          <img :src="avatar_src" alt="" class="avatar_preview">
+          
+        </v-flex>
+        <v-flex xs12>
+          <label for="file-upload" class="custom-file-upload">
+                  Seleccionar Imagen
+              </label>
+              <input id="file-upload" type="file" @change="procesarArchivo($event)">
+              <v-btn :loading="loading_avatar" color="primary" @click="updateAvatar(avatar)">Actualizar imagen</v-btn>
+        </v-flex>
+        <v-flex xs12>
           <v-text-field v-model="profile.nombre" label="Nombre"></v-text-field>
         </v-flex>
         <v-flex xs12>
-          <v-text-field disabled v-model="profile.email" label="Email"></v-text-field>
+          <v-text-field v-model="profile.email_profesional" label="Email"></v-text-field>
         </v-flex>
         <v-flex xs12>
           <v-text-field v-model="profile.telefono" label="Telefono"></v-text-field>
@@ -163,7 +174,7 @@ export default {
       profile: {
         id_profile: '',
         nombre: '',
-        email: '',
+        email_profesional: '',
         profesion: '',
         presentacion: '',
         ocupacion: '',
@@ -174,6 +185,8 @@ export default {
         lenguages_level: [],
         other_studies: []
       },
+      avatar: null,
+      avatar_src: '',
       social_networks: {},
       languages: [],
       type_rrss: [],
@@ -184,13 +197,15 @@ export default {
         show: false,
         color: '',
         message: ''
-      }
+      },
+      loading_avatar: false
     }
   },
   mounted () {
     let vm = this
     vm.profile.nombre = vm.credentialService.getCurrentUser().name
-    vm.profile.email = vm.credentialService.getCurrentUser().email
+    vm.avatar_src = vm.credentialService.getCurrentUser().avatar
+    // vm.profile.email_profesional = vm.credentialService.getCurrentUser().email
     vm.profile.id_profile = vm.credentialService.getCurrentUser().id_profile
     if (vm.profile.id_profile) {
       profileService.getById(vm.profile.id_profile).then(response => {
@@ -218,6 +233,21 @@ export default {
       let vm = this
       profileService.save(profile).then(response => {
         vm.showSnackbar('Perfil actualizado con éxito.', 'green')
+      })
+    },
+    updateAvatar (avatar) {
+      let vm = this
+      vm.loading_avatar = true
+      let formData = new FormData()
+      formData.append('avatar', avatar)
+      profileService.save(formData).then(response => {
+        let avatar = response.body.avatar
+        let user = vm.credentialService.getCurrentUser()
+        user.avatar = avatar
+        vm.credentialService.setCurrentUser(user)
+        vm.$eventHub.$emit('updateUser')
+        vm.loading_avatar = false
+        vm.showSnackbar('imagen actualizada con éxito.', 'green')
       })
     },
     showSnackbar (message, color) {
@@ -278,7 +308,27 @@ export default {
     deleteLanguage (index) {
       this.profile.lenguages_level.splice(index, 1)
       this.profile = JSON.parse(JSON.stringify(this.profile))
+    },
+    procesarArchivo (event) {
+      this.avatar = event.target.files[0]
+      this.avatar_src = window.URL.createObjectURL(this.avatar)
     }
+    // subirArchivo (file) {
+    //   let vm = this
+    //   if (file) {
+    //     let data = new FormData()
+    //     data.append('id_causa', this.id_causa)
+    //     data.append('file', file)
+    //     registroDocumentoService.query(this.id_causa, file.name).then(registroDocumento => {
+    //       vm.registro = registroDocumento.body
+    //       vm.$http.post('http://172.17.24.10/apis/DDHH/public/api/archivo', data).then(response => {
+    //         this.dialogDocumento = false
+    //         setTimeout(function () {
+    //           location.reload()
+    //         })
+    //       })
+    //     })
+    //   }
   },
   computed: {
     social_networks_filter () {
@@ -298,5 +348,20 @@ export default {
 </script>
 
 <style>
+.avatar_preview {
+  object-fit: cover;
+  width:230px;
+  height:230px;
+}
 
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
 </style>
